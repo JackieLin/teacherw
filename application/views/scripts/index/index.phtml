@@ -1,0 +1,101 @@
+﻿<!--
+@author linbin
+@content the login page
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+		<title>高校教师绩效考核系统</title>
+		<meta name="keywords" content="高校教师绩效考核系统"/>
+		<meta name="description" content="高校教师绩效考核系统"/>
+	    <link rel="shortcut icon" href="./image/favicon.ico"/>
+		<link rel="stylesheet" href="./css/style.css" type="text/css"/>
+		<script type="text/javascript" src="./js/Core.class.js"></script>
+		<script type="text/javascript" src="./js/SandBox.class.js"></script>
+	</head>
+	<body>
+		<!-- 处理背景-->
+		<div class="logpdiv">
+			<div id="background" style="position: absolute; width:100%;height:100%">
+				<img style="width:100%;height:auto;" alt="background"/>
+			</div>
+		</div>
+		<!-- 首页正文部分-->
+		<div id="Content">
+			<article style="width: 100%; height:100%;" id="page_data">
+				<div class="data">
+					<div class="logpi">
+						<img src="./image/logo.png"/>
+					</div>
+					<!--分隔線 -->
+					<div class="tran"></div>
+					<div class="text">
+						<div class="logForm">
+							<form>
+								<ul class="input">
+									<li style="padding-bottom: 15px;">
+										<span>帐号:</span>
+										<input type="text" name="name" class="text-style text-size"/>
+									</li>
+									<li>
+										<span>密码：</span>
+										<input type="password" name="pass" class="text-style text-size" />
+									</li>
+									<li>
+										<div class="tran"></div>
+										<span>验证码：</span>
+										<input type="text" class="text-style check-size"/>
+									</li>
+									<div class="tran"></div>
+									<li>
+										<div style="padding-right: 20px; display: inline-block;">
+											<input type="submit" value="登录" class="submit-type"/>
+										</div>
+										<div style="display: inline-block;">
+											<input type="checkbox" name="check[]"/>
+											<span>下次自动登录</span>
+										</div>
+									</li>
+									<li>
+										<div style="margin-top: 10px;">
+											<a href="#" style="text-decoration: none;">没有帐号?立即注册</a>
+										</div>
+									</li>
+								</ul>
+							</form>
+						</div>
+						<div>
+							<img src="./image/word.png"/>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+		<!-- 结尾部分-->
+		<footer>
+			<div>
+				SCAU Copyright ©  2011华南农业大学.All rights reserved.
+			</div>
+			<div>
+				地址：广州市天河区五山华南农业大学
+			</div>
+			<div>
+				联系人:林滨     微博：<a href="http://weibo.com/dashilin" target="__blank">http://weibo.com/dashilin</a>
+			</div>
+		</footer>
+		<!-- The loader image use css3-->
+		<div class="loader">
+			<div class="circle circle1"></div>
+			<div class="circle circle2"></div>
+			<div class="circle circle3"></div>
+			<div class="circle circle4"></div>
+			<div class="circle circle5"></div>
+			<div class="circle circle6"></div>
+			<div class="circle circle7"></div>
+			<div class="circle circle8"></div>
+		</div>
+	</body>
+	<script type="text/javascript" src="./js/modules/init.js"></script>
+	<script src="./js/animate.js" type="text/javascript" charset="utf-8"></script>
+</html>
