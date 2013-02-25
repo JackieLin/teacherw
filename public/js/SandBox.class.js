@@ -1,5 +1,6 @@
 /**
  * Provide some function to the module
+ * 
  * @author linbin
  */
 var SandBox = (function() {
@@ -10,8 +11,11 @@ var SandBox = (function() {
 
 	/**
 	 * the sandbox constructor
-	 * @param {Object} core
-	 * @param {Object} moduleName
+	 * 
+	 * @param {Object}
+	 *            core
+	 * @param {Object}
+	 *            moduleName
 	 */
 	var SandBox = function(core, moduleName) {
 		if (!moduleName) {
@@ -24,11 +28,14 @@ var SandBox = (function() {
 
 	/**
 	 * the getter and setter about public data
-	 * @param {Object} name
-	 * @param {Object} value
+	 * 
+	 * @param {Object}
+	 *            name
+	 * @param {Object}
+	 *            value
 	 */
 	SandBox.prototype.data = function(name, value) {
-		if ( typeof value != "undefined") {
+		if (typeof value != "undefined") {
 			pubData[name] = value;
 		} else {
 			return pubData[name];
@@ -37,8 +44,11 @@ var SandBox = (function() {
 
 	/**
 	 * To find the document with the selector
-	 * @param {Object} selector
-	 * @param {Object} ctx  container
+	 * 
+	 * @param {Object}
+	 *            selector
+	 * @param {Object}
+	 *            ctx container
 	 */
 	SandBox.prototype.find = function(selector, ctx) {
 		ctx = ctx || this.container;
@@ -46,27 +56,30 @@ var SandBox = (function() {
 	};
 
 	/**
-	 *
-	 * @param {Object} evts
-	 * evts {1.actionName 2.actionFunction}
+	 * 
+	 * @param {Object}
+	 *            evts evts {1.actionName 2.actionFunction}
 	 */
 	SandBox.prototype.listen = function(evts) {
-		for (var evt in evts) {
+		for ( var evt in evts) {
 			core.registerEvent(this.moduleName, evt, evts[evt]);
 		}
 	};
 
 	/**
 	 * Add class to the element
-	 * @param {Object} elem
-	 * @param {Object} className
+	 * 
+	 * @param {Object}
+	 *            elem
+	 * @param {Object}
+	 *            className
 	 */
 	SandBox.prototype.addClass = function(elem, className) {
 		if (elem.classList) {
 			elem.classList.add(className);
 		} else {
 			var clses = elem.className.split(" "), cls, length = clses.length, find = false;
-			for (var i = 0; i < length; i++) {
+			for ( var i = 0; i < length; i++) {
 				cls = clses[i];
 				if (cls == className) {
 					find = true;
@@ -80,12 +93,12 @@ var SandBox = (function() {
 	};
 
 	/**
-	 *  To exec the queue with some time
+	 * To exec the queue with some time
 	 */
 	SandBox.prototype.queue = function() {
 		var funs = function() {
 		}, oldfun;
-		for (var i = arguments.length - 1,obj; i >= 0; i--) {
+		for ( var i = arguments.length - 1, obj; i >= 0; i--) {
 			obj = arguments[i];
 			oldfun = funs;
 			// call all the function
@@ -105,48 +118,64 @@ var SandBox = (function() {
 
 	/**
 	 * To remove the class
-	 * @param {Object} elem
-	 * @param {Object} className
+	 * 
+	 * @param {Object}
+	 *            elem
+	 * @param {Object}
+	 *            className
 	 */
 	SandBox.prototype.removeClass = function(elem, className) {
-         if(elem.classList){
-         	elem.classList.remove(className);
-         } else{
-         	var clses = elem.className.split(" "),
-         	cls,len = clses.length;
-         	for(var i = 0;i < len;i++){
-         		cls = clses[i];
-         		if(cls == className){
-         			if(i == 0){
-         				if(len > 1){
-         					className = className + " ";
-         				}
-         			} else {
-         				className = " " + className;
-         			}
-         			elem.className = elem.className.replace(className,"");
-         		}
-         	}
-         }
+		if (elem.classList) {
+			elem.classList.remove(className);
+		} else {
+			var clses = elem.className.split(" "), cls, len = clses.length;
+			for ( var i = 0; i < len; i++) {
+				cls = clses[i];
+				if (cls == className) {
+					if (i == 0) {
+						if (len > 1) {
+							className = className + " ";
+						}
+					} else {
+						className = " " + className;
+					}
+					elem.className = elem.className.replace(className, "");
+				}
+			}
+		}
 	};
-	
+
 	/**
 	 * notify event registered by events
-     * 
-     * @param {string} evtObj
-     * @see Core.triggerEvent
+	 * 
+	 * @param {string}
+	 *            evtObj
+	 * @see Core.triggerEvent
 	 */
-	SandBox.prototype.notify = function (evtObj){
-	   this.core.triggerEvent(evtObj);	
+	SandBox.prototype.notify = function(evtObj) {
+		this.core.triggerEvent(evtObj);
 	};
-	
+
 	/**
-	 *  execute the script
-     * @param {Object} script
+	 * execute the script
+	 * 
+	 * @param {Object}
+	 *            script
 	 */
 	SandBox.prototype.eval = function(scripts) {
 		eval(scripts);
 	};
-	
+
+	/**
+	 * use ajax to send data
+	 * 
+	 * @param {Object}
+	 *            data {'type': string 'postdata': string(when post type have)
+	 *            'url': string 'success': function}
+	 */
+	SandBox.prototype.ajax = function(data) {
+		this.core.ajax(data);
+	};
+
 	return SandBox;
 })();

@@ -34,7 +34,19 @@ Core.registerModule("Content", function(sb) {
 				fn : function (){
 					//alert(mainContent.innerHTML);
 					container.appendChild(mainContent);
-					
+					// 添加验证码的点击事件
+					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage");
+					if(imageChange && checkImage){
+						imageChange.onclick = function() {
+							sb.ajax({
+								'type' : 'GET',
+								'url' : 'index/code',
+								'success' : function(data) {
+									checkImage.src = data + ".png";
+								}
+							})
+						};
+					}
 				}
 			},{
 				fn : function () {

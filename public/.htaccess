@@ -1,6 +1,14 @@
 
 RewriteEngine On
 
+RewriteBase /
+
+#RewriteCond %{REQUEST_URI} ^.*\.html$ [NC]
+#RewriteRule ^(.*)\.html$ $1.php
+
+#RewriteCond %{REQUEST_URI} =""
+#RewriteRule ^.*$ index.php [NC,L]
+
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d
