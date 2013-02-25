@@ -4,3 +4,4 @@ library
 .project
 .settings
 tests
+public/image/code
