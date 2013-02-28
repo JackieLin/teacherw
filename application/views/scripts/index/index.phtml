@@ -32,20 +32,23 @@
 					<div class="tran"></div>
 					<div class="text">
 						<div class="logForm">
-							<form>
+							<form id="loginForm" method="post">
 								<ul class="input">
 									<li style="padding-bottom: 15px;">
 										<span>帐号:</span>
 										<input type="text" name="name" class="text-style text-size"/>
+										<div style="color: red;display: none;">帐号不能为空!!</div>
 									</li>
 									<li>
 										<span>密码：</span>
 										<input type="password" name="pass" class="text-style text-size" />
+										<div style="color: red; display: none;">密码不能为空!!</div>
 									</li>
 									<li>
 										<div class="tran"></div>
 										<span>验证码：</span>
-										<input type="text" class="text-style check-size"/>
+										<input name="ckeckCode" type="text" class="text-style check-size"/>
+										<div style="color: red; display: none;">验证码不能为空!!</div>
 									</li>
 									<li>
 									    <div class="tran" style="height: 10px;"></div>
@@ -59,7 +62,7 @@
 									<div class="tran"></div>
 									<li>
 										<div style="padding-right: 20px; display: inline-block;">
-											<input type="submit" value="登录" class="submit-type"/>
+											<input type="button" value="登录" class="submit-type"/>
 										</div>
 										<div style="display: inline-block;">
 											<input type="checkbox" name="check[]"/>
@@ -95,14 +98,14 @@
 		</footer>
 		<!-- The loader image use css3-->
 		<div class="loader">
-			<div class="circle circle1"></div>
-			<div class="circle circle2"></div>
-			<div class="circle circle3"></div>
-			<div class="circle circle4"></div>
-			<div class="circle circle5"></div>
-			<div class="circle circle6"></div>
-			<div class="circle circle7"></div>
-			<div class="circle circle8"></div>
+			<div class="circle circle1" style="display: none;"></div>
+			<div class="circle circle2" style="display: none;"></div>
+			<div class="circle circle3" style="display: none;"></div>
+			<div class="circle circle4" style="display: none;"></div>
+			<div class="circle circle5" style="display: none;"></div>
+			<div class="circle circle6" style="display: none;"></div>
+			<div class="circle circle7" style="display: none;"></div>
+			<div class="circle circle8" style="display: none;"></div>
 		</div>
 	</body>
 	<script type="text/javascript" src="./js/modules/init.js"></script>

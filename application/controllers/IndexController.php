@@ -20,6 +20,15 @@ class IndexController extends Zend_Controller_Action
     	
     }
 
+    // 验证模块
+    public function loginAction(){
+        $request = $this->getRequest();
+        $check = $request->getParam("ckeckCode","default");
+    	$codeSession = new Zend_Session_Namespace('checkcode');
+        $checkCode = $codeSession->code;
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+    
     public function image_generate(){
     	$im = new ImageUtils(APPLICATION_PATH.'/utils/simsun.ttf', 'checkcode', './image/code/');
     	/**

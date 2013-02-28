@@ -16,7 +16,7 @@ Core.registerModule("Content", function(sb) {
 			mainContent = null;
 			container = null;
 		},
-
+		
 		animate : function() {
 			// 初始化时动画
 			var pageTransitionCls = "main_content_out_" + pageTransition[parseInt(Math.random() * pageTransition.length)];
@@ -35,7 +35,69 @@ Core.registerModule("Content", function(sb) {
 					//alert(mainContent.innerHTML);
 					container.appendChild(mainContent);
 					// 添加验证码的点击事件
-					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage");
+					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage"),
+					    logButton = document.getElementsByClassName('submit-type'), divs = [],
+					    /**
+					     * @returns cDiv array the array that warn user
+					     */
+					    check = function() {
+							var inputs = document.getElementsByTagName('input'),  cDiv = [];
+							//init
+							for(var i = 0,t;t = inputs[i];i++){
+								var type = t.type, name = t.name;
+								if(type === 'text' || type === 'password'){
+									cDiv[name] = t.nextSibling.nextSibling
+									// onblur event
+									t.onblur = function(event){
+										var value = event.srcElement.value, name = event.srcElement.name;
+										if(value === ""){
+											cDiv[name].style.display = "block";
+										}else{
+											cDiv[name].style.display = "none";
+										}
+									}
+								}
+							}
+							return cDiv;
+						},
+						/**
+						 * @param divs array the elem that warn user
+						 * @returns result
+						 */
+						postData = function(divs){
+                            var input = document.getElementsByTagName("input"), result = "";
+							for(var j = 0,k; k = input[j]; j++){
+								var type = k.type, value = k.value, name = k.name;
+							    if(type === 'text' || type === 'password'){
+									// check
+									if(value === ""){
+										result = "";
+										divs[name].style.display = "block";
+										return result;
+									}else{
+										divs[name].style.display = "none";
+										result += k.name + "=" + value + "&";
+									}
+							    }
+							}
+							result = result.substring(0,result.length - 1);
+							return result;
+						},
+						
+						/**
+						 * @param circles array
+						 */
+						triggerCircles = function(circles){
+							for(var i = 0,t; t = circles[i]; i++){
+								var display = t.style.display;
+								if(display === 'none'){
+									t.style.display = 'block';
+								}else{
+									t.style.display = 'none';
+								}
+							}
+						};
+	
 					if(imageChange && checkImage){
 						imageChange.onclick = function() {
 							sb.ajax({
@@ -46,6 +108,31 @@ Core.registerModule("Content", function(sb) {
 								}
 							})
 						};
+					}
+					divs = check();
+					// 用户点击事件
+					if(logButton){
+						for(var i = 0,t; t = logButton[i];i++) {
+							    t.onclick = function(){
+							    	    var result = postData(divs), circles = document.getElementsByClassName('circle');
+							    	    if(result === ""){
+							    	    	return;
+							    	    }else{
+							    	    	// show the circles
+							    	    	triggerCircles(circles);
+											sb.ajax({
+												'type' : 'POST',
+												'url' : 'index/login',
+												'postdata' : result,
+												'success' : function(data) {
+//													alert(data);
+												}
+			 								});
+	//	    								logForm.action = "index/login";
+	//										logForm.submit();
+							    	    }
+							    }
+							}	
 					}
 				}
 			},{
