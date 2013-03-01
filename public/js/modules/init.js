@@ -4,7 +4,6 @@
  */
 Core.registerModule("Content", function(sb) {
 	var mainContent = null, container = sb.container, pageTransition = ["pop", "fade", "moveleft", "movedown", "spin"];
-
 	return {
 		init : function() {
 			mainContent = contents.content;
@@ -36,17 +35,21 @@ Core.registerModule("Content", function(sb) {
 					container.appendChild(mainContent);
 					// 添加验证码的点击事件
 					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage"),
-					    logButton = document.getElementsByClassName('submit-type'), divs = [],
+					    logButton = document.getElementsByClassName('submit-type'), divs = [],checkInit = sb.find('.check_init'),
 					    /**
 					     * @returns cDiv array the array that warn user
 					     */
 					    check = function() {
 							var inputs = document.getElementsByTagName('input'),  cDiv = [];
 							//init
+//							checkInit.onfocus = function(){
+//								alert(this);
+//							}
+							
 							for(var i = 0,t;t = inputs[i];i++){
 								var type = t.type, name = t.name;
 								if(type === 'text' || type === 'password'){
-									cDiv[name] = t.nextSibling.nextSibling
+									cDiv[name] = t.nextSibling.nextSibling;
 									// onblur event
 									t.onblur = function(event){
 										var value = event.srcElement.value, name = event.srcElement.name;
@@ -109,9 +112,9 @@ Core.registerModule("Content", function(sb) {
 							})
 						};
 					}
-					divs = check();
 					// 用户点击事件
 					if(logButton){
+						divs = check();
 						for(var i = 0,t; t = logButton[i];i++) {
 							    t.onclick = function(){
 							    	    var result = postData(divs), circles = document.getElementsByClassName('circle');
@@ -125,7 +128,10 @@ Core.registerModule("Content", function(sb) {
 												'url' : 'index/login',
 												'postdata' : result,
 												'success' : function(data) {
-//													alert(data);
+													triggerCircles(circles);
+													alert(data);
+//													message = document.getElementById('message');
+//													message.innerHTML = data;
 												}
 			 								});
 	//	    								logForm.action = "index/login";

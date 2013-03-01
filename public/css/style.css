@@ -133,6 +133,10 @@ ul li{
 	width: 70%;
 }
 
+.check_init{
+	color: hsl(0, 0%, 50%);
+    font-size: 20px;
+}
 .submit-type{
    height: 40px;
    width: 140px;
