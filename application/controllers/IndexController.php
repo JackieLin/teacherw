@@ -43,7 +43,7 @@ class IndexController extends BaseController
         }
         // database
         if($this->checkDb($name, $password,$user,$roleNames)){
-           if(!isset($roleNames)){
+           if($roleNames === ''){
            	   echo '用户没有登录权限,请先到邮箱验证';
            	   $this->_helper->viewRenderer->setNoRender(true);
            	   return;
@@ -52,14 +52,16 @@ class IndexController extends BaseController
            $userSession = new Zend_Session_Namespace('user');
            $userSession->user = $user;
            $userSession->roleNames = $roleNames;
-           
+
+           echo 'success';
+           $this->_helper->viewRenderer->setNoRender(true);
+           return;
         } else{
            echo '密码错误,请重新输入';
            $this->_helper->viewRenderer->setNoRender(true);
            return;
         }
-        echo 'login success';
-        $this->_helper->viewRenderer->setNoRender(true);
+        
     }
     
     private function image_generate(){
@@ -83,10 +85,10 @@ class IndexController extends BaseController
      * @param string $name the user nickname or number
      * @param string $password
      * @param array $user  the user attribute
-     * @param string $roleName the user role
+     * @param string $roleName
      * @return boolean
      */
-    private function checkDb($name,$password,$userMessage,$roleName){
+    private function checkDb($name,$password,&$userMessage,&$roleName){
     	if(!isset($name) || !isset($password)){
     		die('The name or password is not set');
     	}
@@ -117,10 +119,10 @@ class IndexController extends BaseController
         	$userMessage[$key] = $value;
         }
 
-        $roles = $datautils->findManyToManyRow($resultset, 'Role', 'RoleUser');
-        
+        $roles = $datautils->findManyToManyRow($resultset, 'Role', 'RoleUser', 'User', 'Role');
         for ($i = 0; $i < count($roles); $i++){
         	$t = $roles[$i];
+        	
         	foreach ($t as $key => $value){
         		if($key == 'name'){
         			if($value == 'login') $flag = true;
@@ -128,15 +130,14 @@ class IndexController extends BaseController
         		}
         	}
         }
-        
         if($flag === false){
         	$roleName = '';
         }
-        
         return true;
     }
 
     /**
+     * $this->writeLog('/home/linbin/Zend/output.log',***);
      * @param string $fileName file name
      * @param string $content  the content would be written
      */

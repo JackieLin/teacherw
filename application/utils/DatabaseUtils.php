@@ -76,12 +76,14 @@
    	    * @param object $rows
    	    * @param string $matchTable the rows table
    	    * @param string $intersectionTable
+   	    * @param string $callerRefRule The role that interactionTable to origin table
+   	    * @param string $matchTable The role that interactionTable to destination table
    	    */
-   	   public function findManyToManyRow($rows,$matchTable,$intersectionTable){
+   	   public function findManyToManyRow($rows,$matchTable,$intersectionTable,$callerRefRule=null,$matchRefRule = null){
    	        if(!isset($matchTable) || !isset($intersectionTable)){
    	        	die("DatabaseUtils::findManyToManyRow the matchTable and intersectionTable should not be null!!");
    	        }
-   	        return $rows->findManyToManyRowset($matchTable,$intersectionTable);
+   	        return $rows->findManyToManyRowset($matchTable,$intersectionTable,$callerRefRule,$matchRefRule);
    	   }
    }
 ?>

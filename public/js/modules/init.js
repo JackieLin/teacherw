@@ -42,9 +42,12 @@ Core.registerModule("Content", function(sb) {
 					    check = function() {
 							var inputs = document.getElementsByTagName('input'),  cDiv = [];
 							//init
-//							checkInit.onfocus = function(){
-//								alert(this);
-//							}
+							checkInit.onfocus = function(){
+								if(checkInit.value === '学号/昵称'){
+									checkInit.value = '';
+									sb.removeClass(checkInit,'check_init');
+								}
+							}
 							
 							for(var i = 0,t;t = inputs[i];i++){
 								var type = t.type, name = t.name;
@@ -73,7 +76,7 @@ Core.registerModule("Content", function(sb) {
 								var type = k.type, value = k.value, name = k.name;
 							    if(type === 'text' || type === 'password'){
 									// check
-									if(value === ""){
+									if(value === "" || value === '学号/昵称'){
 										result = "";
 										divs[name].style.display = "block";
 										return result;
@@ -129,7 +132,12 @@ Core.registerModule("Content", function(sb) {
 												'postdata' : result,
 												'success' : function(data) {
 													triggerCircles(circles);
-													alert(data);
+													if(data === 'success'){
+														// To main page
+														location.href = 'main/main';
+													}else{
+														alert(data);
+													}
 //													message = document.getElementById('message');
 //													message.innerHTML = data;
 												}
