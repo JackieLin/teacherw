@@ -4,6 +4,6 @@
    	    * @var string table name
    	    */
    	   protected $_name = 'role';
-   	   protected $_dependentTables = array('Competence_role','Role_user');
+   	   protected $_dependentTables = array('CompetenceRole','RoleUser');
    }
 ?>

@@ -41,7 +41,7 @@
 				</ul>
 				<input type="text" name="search" value="搜索" />
 				<div>
-					欢迎您：林滨老师 
+					欢迎您：<?php echo $this->user['name']; ?>老师 
 				</div>
 			</div>
 		</header>
@@ -55,9 +55,13 @@
 						<div id="left">
 							<!-- 头像部分-->
 							<div class="top" style="float: left;">
-								<img src="./image/default.jpg" alt="defaultImage"/>
+							    <?php if($this->user['avater'] === '暂无'){ ?>
+								  <img src="./image/default.jpg" alt="defaultImage"/>
+								<?php } else { ?>
+								  <img src=<?php echo $this->user['avater']; ?> alt="defaultImage"/>
+								<?php }?>
 								<div class="nick">
-									jackie_lin
+									<?php echo $this->user['nickname'];?>
 								</div>
 								<div class="clear"></div>
 								<div class="sit">
@@ -72,8 +76,10 @@
 								<div class="bottom" id="reel">
 									<div class="info">
 										<h2>详细信息:</h2>
-										<h4>学院：信息学院</h4>
-										<h4>姓名：林滨</h3> <h4>职位：教授</h4><h4>主修专业：计算机科学与技术</h4><h4>教学课程：计算机导论 数据库原理</h4><h4>办公室地址：信息学院院楼211</h4><h4>联系方式：020-11111111</h4>
+										<h4>学院：<?php echo $this->user['college'];?></h4>
+										<h4>姓名：<?php echo $this->user['name'];?></h3> <h4>职位：<?php echo $this->user['post'];?></h4>
+										<h4>主修专业：<?php echo $this->user['specialty'];?></h4><h4>教学课程：<?php echo $this->user['tutorial'];?></h4>
+										<h4>办公室地址：<?php echo $this->user['office'];?></h4><h4>联系方式：<?php echo $this->user['contact'];?></h4>
 									</div>
 								</div>
 							</div>
@@ -90,36 +96,20 @@
 								</div>
 							</nav>
 
-							<article id="arti">
-								<h2><a href="#" style="color: #000;text-decoration: none;">xfdsfsfsfsfsfs </a></h2>
-								<p>
-									wrwrwrwrwerwrwrwrwrwrwrwrwrwrwrwr
-									sgsfgfdgdfgfdgfdgdhgggggggdhfgdf
-									sdfsdfsfsfsdfsfsfsffffffffffffffff
-									<br />
-									sfsdfsdfs
-									<br />
-									afgsgfsgfdgdfgdfg
-									<br />
-									dasfsdsdfsdfsfsfsfsfs
-									<br />
-									sgfsgsfgfgfsdgfdsgfdgfdgfdg
-									<br />
-									aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-									<br />
-									dewrfewergregddf
-									<br />
-									fsgsfgfdgdfgdfgdfhrweewq
-									<br />
-									safsdfsgsdgdfgdfgfdbhd
-									<br />
-								</p>
-
-								<div class="pre" style="margin-top: 40px;">
-									<a href="#" style="color: hsl(206, 79%, 46%);"> <span>评论</span> </a>
-								</div>
-							</article>
-							<nav id="nav_below">
+							<?php for($i = 0;$i < count($this->news);$i++) { 
+							           $temp = $this->news[$i];
+							?>
+								<article id="arti">
+									<h2><a href="#" style="color: #000;text-decoration: none;"><?php echo $temp['title'];?> </a></h2>
+                                    <section style="word-wrap:break-word;"><?php echo $temp['content'];?></section>
+	
+									<div class="pre" style="margin-top: 10px;">
+										<a href="#" style="color: hsl(206, 79%, 46%);"> <span>评论(<?php echo $temp['commNum'];?>)</span> </a>
+									</div>
+								</article>
+							<?php } ?>
+							
+							<nav id="nav_below" style="margin-top: 30px;">
 								<div class="pre_page pre">
 									<a href="javascript:;"> &lt;- Older posts </a>
 								</div>
@@ -134,15 +124,16 @@
 								<div id="datepicker"></div>
 							</div>
 							<ul>
-								<li>
-									<h3>友情链接 </h3>
+							    <li>
+										<h3>友情链接 </h3>
 								</li>
-								<li class="pre">
-									<a href="#"><span>华南农业大学教务处</span></a>
-								</li>
-								<li class="pre">
-									<a href="#"><span>华南农业大学教务处dfgdfgdfgdfgdfg</span></a>
-								</li>
+							    <?php for($i = 0;$i < count($this->links);$i++) { 
+							           $temp = $this->links[$i];
+							    ?>
+								    <li class="pre">
+										<a href="<?php echo $temp['url']; ?>" target="_blank"><span><?php echo $temp['name']; ?></span></a>
+									</li>
+								<?php } ?>
 							</ul>
 						</div>
 					</div>

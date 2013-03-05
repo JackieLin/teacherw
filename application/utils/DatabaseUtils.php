@@ -2,6 +2,7 @@
    /**
     * @author linbin
     */
+   require_once APPLICATION_PATH.'/utils/LogUtils.php';
    class DatabaseUtils{
    	   
    	   /**
@@ -15,6 +16,8 @@
    	    * @return object|array $row the result set about the table
    	    */
    	   public function fetchData($table,$db,$datas,$flag='row'){
+   	   	   $logs = new LogUtils('/home/linbin/Zend/output.log');
+   	   	   
    	   	   //$type = var_dump($datas); 
    	   	   $length = count($datas);
    	   	   $where = null;
@@ -31,10 +34,7 @@
    	   	   	   	   if(!isset($order)){
    	   	   	   	   	   $order = array();
    	   	   	   	   }
-   	   	   	   	   $arr = $val->split(',');
-   	   	   	   	   foreach ($arr as $v){
-   	   	   	   	   	   $order[] = $v;
-   	   	   	   	   }
+   	   	   	   	   $order = explode(',', $val);
    	   	   	   } else if($key == 'count'){
    	   	   	   	   $count = intval($val);
    	   	   	   } else if($key == 'offset'){
@@ -47,6 +47,7 @@
    	   	   	   	   }
    	   	   	   }
    	   	   }
+//    	   	   $logs->printObject($order);
    	   	   
    	   	   if($flag == 'row'){
    	   	   	   $row = $table->fetchRow($where,$order,$offset);
@@ -57,7 +58,21 @@
    	   	   return $row;
    	   }
    	   
-   	   
+   	   /**
+   	    * To change rowset to array
+   	    * @param object $row    Zend_Db_table_rowset
+   	    * @return array         The resultset(array)
+   	    */
+   	   public function changeToArray($row){
+	   	   	$arrs = array();
+	   	   	for($i = 0;$i < $row->count();$i++){
+	   	   		$temp = $row[$i];
+	   	   		foreach ($temp as $key => $value){
+	   	   			$arrs[$i][$key] = $value;
+	   	   		}
+	   	   	}
+	   	   	return $arrs;
+   	   }
    	   /**
    	    * @param object $rows   The row that would be used
    	    * @param string $class  The class name that would be used

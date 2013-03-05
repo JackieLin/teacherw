@@ -100,8 +100,6 @@ class IndexController extends BaseController
     	$datas = null;
     	$flag = false;
     	$password = md5($password);
-    	require_once APPLICATION_PATH.'/utils/LogUtils.php';
-    	$log = new LogUtils('/home/linbin/Zend/output.log');
     	if(preg_match($pattern, $name)){
     		// number
     		$datas = array('number' => $name);
@@ -116,9 +114,13 @@ class IndexController extends BaseController
         }
         
         foreach ($resultset as $key => $value){
-        	$userMessage[$key] = $value;
+        	if(!isset($value) || $value === ""){
+        		$userMessage[$key] = '暂无';
+        	}else{
+        	    $userMessage[$key] = $value;
+        	}
         }
-
+        
         $roles = $datautils->findManyToManyRow($resultset, 'Role', 'RoleUser', 'User', 'Role');
         for ($i = 0; $i < count($roles); $i++){
         	$t = $roles[$i];
@@ -135,15 +137,6 @@ class IndexController extends BaseController
         }
         return true;
     }
-
-    /**
-     * $this->writeLog('/home/linbin/Zend/output.log',***);
-     * @param string $fileName file name
-     * @param string $content  the content would be written
-     */
-    public function writeLog($fileName, $content){
-    	 $logUtils = new LogUtils($fileName);
-    	 $logUtils->writeLog($content);
-    }
+    
 }
 
