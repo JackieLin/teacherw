@@ -1,5 +1,6 @@
 <?php
 
+// To test the windows github
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
    function __construct($application){
