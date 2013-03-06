@@ -4,11 +4,13 @@ RewriteEngine On
 RewriteBase /
 
 RewriteCond %{HTTP_HOST} ^teacherw.sinaapp.com
+RewriteCond %{REQUEST_URI} !^main-.*\.html$
+RewriteRule ^(.*)\.html$ http://teacherw.sinaapp.com/$1/$1  [L,P]
 RewriteRule ^((index|main)\/)(.*\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm))$ $3 [L]
 #RewriteRule ^(.*\/)(.*\/)(.*\.js|.*\.ico|.*\.gif|.*\.jpg|.*\.png|.*\.css|.*\.swf|.*\.flv|.*\.xml)$ $2$3 [L]
 RewriteRule ^(.*\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm))$ $1 [L] 
 #RewriteRule ^(.*)$ http://teacher.sinaapp.com/$1 [L,R=302]
-RewriteRule !\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm)$ index.php [NC,L]
+RewriteRule !\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm|html)$ index.php [NC,L]
 #RewriteCond %{REQUEST_URI} ^.*\.html$ [NC]
 #RewriteRule ^(.*)\.html$ $1.php
 

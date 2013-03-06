@@ -3,37 +3,49 @@
  *  the index page main module
  */
 Core.registerModule('indexmain', function(sb) {
-	var scroll = null, plugins = null, nav_above = null, nav_below = null, pre_page = null, next_page = null;
+	var scroll = null, plugins = null, nav_above = null, nav_below = null, pre_page = null, next_page = null,
+	url = /\w+:\/\/[\w.]+\/main-news(\d+)\.html/, history = window.history;
 
 	return {
 		init : function() {
 
 			var getPage = function() {
-				var hash = location.hash, params;
-				if (hash.length > 1) {
-					hash = hash.substring(1);
-					params = hash.split('&');
-					for (var i = 0, param; param = params[i]; i++) {
-						param = param.split('=');
-						var key = param[0], value = param[1];
-
-						if (key === 'page') {
-							return parseInt(value);
-						}
-					}
+				var href = window.location.href, result = href.match(url),page;
+				
+				if (result != null) {
+					page = result[1];
+				} else {
+					page = 1;
 				}
-				return 1;
+				return page;
 			}, prePage = function() {
-				var page = getPage();
-				location.hash = "#page=" + (page + 1);
+				var page = parseInt(getPage()) + 1;
+				
+				// To put a history
+				history.pushState('main','news',"http://teacherw.sinaapp.com/main-news" + page + ".html");
+				ajaxRedirect(page);
+				
 			}, nextPage = function() {
-				var page = getPage();
-				location.hash = "#page=" + (page - 1);
+				var page = parseInt(getPage()) - 1;
+				history.pushState('main','news',"http://teacherw.sinaapp.com/main-news" + page + ".html");
+				ajaxRedirect(page);
+				
+			}, ajaxRedirect = function(page){
+				if(!page){
+					alert("The page is not exsist!!");
+				}
+				var url = "main/page?page=" + page;
+				sb.ajax({
+					'type' : 'GET',
+					'url' : url,
+					'success' : function(data) {
+					   var arr = JSON.parse(data);
+					   //
+					}
+				});
 			};
 
-			window.onhashchange = function() {
-
-			}
+			
 			sb.queue({
 				fn : function() {
 					scroll = document.getElementById("scroll");

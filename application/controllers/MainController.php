@@ -13,6 +13,7 @@
    	   private $_user;
    	   private $_roles;
    	   private $_database;
+   	   private $_pagerequest;
    	   
    	   public function init(){
    	   	   // init
@@ -21,10 +22,15 @@
    	       $this->_user = $this->_userSession->user;
    	       $this->_roles = $this->_userSession->roleNames;
    	       $this->_database = new DatabaseUtils();
+   	       $this->_pagerequest = $this->getRequest();
    	   }
    	   
    	   public function mainAction(){
    	   	
+   	   	   // 验证用户是否登录
+   	   	   if(!isset($this->_user)){
+   	   	   	  $this->_forward('index','index',null,array('login'=>'nologin'));
+   	   	   }
    	       // To show news
    	   	   $news = new News();
    	   	   $condition = array(
@@ -32,8 +38,8 @@
    	   	   		'count' => '5'
    	   	   );
    	   	   
-   	   	   $newpage = $this->fetchNews($news, $this->db, $condition,1);
-
+   	   	   $newpage = $this->fetchNewsByPage(1);
+   	   	   
    	   	   // To show links
    	   	   $links = new Links();
    	   	   $linkDate = $this->_database->fetchData($links, $this->db, array(),'all');
@@ -42,6 +48,33 @@
    	   	   $this->view->assign('user',$this->_user);
    	   	   $this->view->assign('news',$newpage);
    	   	   $this->view->assign('links',$linkset);
+   	   }
+   	   
+   	   /**
+   	    * 分页显示结果
+   	    */
+   	   public function pageAction(){
+   	   	   $pageNum = $this->_pagerequest->getParam('page');
+   	   	   if(!isset($pageNum)){
+   	   	   	  die("MainController::pageAction  The page number should be exsist!!");
+   	   	   }
+   	   	   
+   	   	   $newset = $this->fetchNewsByPage(intval($pageNum));
+   	   	   echo json_encode($newset);
+   	   	   $this->_helper->viewRenderer->setNoRender(true);
+   	   }
+   	   
+   	   /**
+   	    * To fetch news with page num
+   	    * @param int $page
+   	    */
+   	   public function fetchNewsByPage($page){
+	   	   	$news = new News();
+	   	   	$condition = array(
+	   	   			'order' => 'time DESC',
+	   	   			'count' => '5'
+	   	   	);
+	   	   	return $this->fetchNews($news, $this->db, $condition,$page);
    	   }
    	   
    	   /**

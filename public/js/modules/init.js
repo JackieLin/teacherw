@@ -36,6 +36,7 @@ Core.registerModule("Content", function(sb) {
 					// 添加验证码的点击事件
 					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage"),
 					    logButton = document.getElementsByClassName('submit-type'), divs = [],checkInit = sb.find('.check_init'),
+					    message = sb.find('.message');
 					    /**
 					     * @returns cDiv array the array that warn user
 					     */
@@ -115,6 +116,15 @@ Core.registerModule("Content", function(sb) {
 							})
 						};
 					}
+					
+					if(message){
+						var hash = location.hash,result = hash.substring(1),num = result.indexOf("="),
+						param = result.substring(num + 1, result.length);
+						if(param === 'nologin'){
+							message.style.display = "block";
+						}
+						
+					}
 					// 用户点击事件
 					if(logButton){
 						divs = check();
@@ -134,7 +144,7 @@ Core.registerModule("Content", function(sb) {
 													triggerCircles(circles);
 													if(data === 'success'){
 														// To main page
-														location.href = 'main/main';
+														location.href = 'main.html';
 													}else{
 														alert(data);
 													}

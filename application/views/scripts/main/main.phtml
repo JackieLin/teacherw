@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="./css/style.css" />
 		<link rel="stylesheet" href="./css/main.css" />
 		<!-- jquery ui-->
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+		<link rel="stylesheet" href="./css/jquery-ui.css" />
 		<script type="text/javascript" src="./js/Core.class.js"></script>
 		<script type="text/javascript" src="./js/SandBox.class.js"></script>
 	</head>
@@ -99,7 +99,7 @@
 							<?php for($i = 0;$i < count($this->news);$i++) { 
 							           $temp = $this->news[$i];
 							?>
-								<article id="arti">
+								<article id="arti" class='articles'>
 									<h2><a href="#" style="color: #000;text-decoration: none;"><?php echo $temp['title'];?> </a></h2>
                                     <section style="word-wrap:break-word;"><?php echo $temp['content'];?></section>
 	
@@ -154,8 +154,10 @@
 			</div>
 		</footer>
 	</body>
+
 	<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+	<script type="text/javascript" src="./js/jquery-ui.js"></script>
+	<script type="text/javascript" src="./js/json.js"></script>
 	<script type="text/javascript" src="./js/modules/init.js"></script>
 	<script type="text/javascript" src="./js/modules/indexMain.js"></script>
 	<script type="text/javascript" src="./js/animate.js"></script>

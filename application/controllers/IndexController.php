@@ -15,7 +15,13 @@ class IndexController extends BaseController
 
     public function indexAction()
     {
+    	$check = $this->getRequest()->getParam('login');
         $this->image_generate();
+        if($check === 'nologin'){
+        	$this->redirect("index.html#login=nologin");
+        } else{
+        	$this->render();
+        }
     }
 
     public function codeAction(){

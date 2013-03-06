@@ -5,3 +5,4 @@ library
 .settings
 tests
 public/image/code
+*.xml
