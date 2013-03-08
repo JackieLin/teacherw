@@ -14,6 +14,7 @@
    	   private $_roles;
    	   private $_database;
    	   private $_pagerequest;
+   	   private $_pageNum;
    	   
    	   public function init(){
    	   	   // init
@@ -21,6 +22,7 @@
    	   	   $this->_userSession = new Zend_Session_Namespace('user');
    	       $this->_user = $this->_userSession->user;
    	       $this->_roles = $this->_userSession->roleNames;
+   	       $this->_pageNum = $this->_userSession->page;
    	       $this->_database = new DatabaseUtils();
    	       $this->_pagerequest = $this->getRequest();
    	   }
@@ -31,14 +33,24 @@
    	   	   if(!isset($this->_user)){
    	   	   	  $this->_forward('index','index',null,array('login'=>'nologin'));
    	   	   }
-   	       // To show news
-   	   	   $news = new News();
-   	   	   $condition = array(
-   	   	   		'order' => 'time DESC',
-   	   	   		'count' => '5'
-   	   	   );
+   	   	   if(!isset($this->_pageNum)){
+   	   	       $this->_pageNum = $this->_database->getTableCount("news", $this->db);
+   	   	       $this->_userSession->page = $this->_pageNum;
+   	   	   }
+   	   	   $page = $this->_pagerequest->getParam("page");
+   	   	   if(!isset($page)){
+   	   	   	   $page = 1;
+   	   	   }
+   	   	   $page = intval($page);
    	   	   
-   	   	   $newpage = $this->fetchNewsByPage(1);
+   	       // To show news
+//    	   	   $news = new News();
+//    	   	   $condition = array(
+//    	   	   		'order' => 'time DESC',
+//    	   	   		'count' => '5'
+//    	   	   );
+   	   	   
+   	   	   $newpage = $this->fetchNewsByPage($page);
    	   	   
    	   	   // To show links
    	   	   $links = new Links();
@@ -48,6 +60,13 @@
    	   	   $this->view->assign('user',$this->_user);
    	   	   $this->view->assign('news',$newpage);
    	   	   $this->view->assign('links',$linkset);
+   	   	   
+   	   	   // No pre news
+   	   	   if($page * 5 >= $this->_pageNum && $page * 5 < $this->_pageNum + 5){
+   	   	   		$this->view->assign("display",'none');
+   	   	   } else{
+   	   	   	    $this->view->assign("display","block");
+   	   	   }
    	   }
    	   
    	   /**
@@ -60,7 +79,12 @@
    	   	   }
    	   	   
    	   	   $newset = $this->fetchNewsByPage(intval($pageNum));
-   	   	   echo json_encode($newset);
+   	   	   
+   	   	   $encode = json_encode($newset);
+   	   	   if($pageNum * 5 >= $this->_pageNum && $pageNum * 5 < $this->_pageNum + 5){
+   	   	   	   $encode .= "nodisplay";
+   	   	   }
+   	   	   echo $encode;
    	   	   $this->_helper->viewRenderer->setNoRender(true);
    	   }
    	   

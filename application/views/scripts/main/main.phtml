@@ -89,32 +89,33 @@
 							<h4 id="notice" class="pre">当前位置：学院通知</h4>
 							<nav id="nav_above">
 								<div class="pre">
-									<a href="javascript:;" class="pre_page"> &lt;- Older posts </a>
+									<a href="javascript:;" class="pre_page" style="display: <?php echo $this->display;?>;"> &lt;- Older posts </a>
 								</div>
 								<div class="pre">
-									<a href="javascript:;" class="next_page"> Newer posts -&gt; </a>
+									<a href="javascript:;" class="next_page" style="display: none;"> Newer posts -&gt; </a>
 								</div>
 							</nav>
 
 							<?php for($i = 0;$i < count($this->news);$i++) { 
 							           $temp = $this->news[$i];
+							           $article = "article-".$temp['id'].".html";
 							?>
 								<article id="arti" class='articles'>
-									<h2><a href="#" style="color: #000;text-decoration: none;"><?php echo $temp['title'];?> </a></h2>
+									<h2><a href="<?php echo $article; ?>" style="color: #000;text-decoration: none;"><?php echo $temp['title'];?> </a></h2>
                                     <section style="word-wrap:break-word;"><?php echo $temp['content'];?></section>
 	
 									<div class="pre" style="margin-top: 10px;">
-										<a href="#" style="color: hsl(206, 79%, 46%);"> <span>评论(<?php echo $temp['commNum'];?>)</span> </a>
+										<a href="<?php echo $article.'#comment'?>" style="color: hsl(206, 79%, 46%);"> <span>评论(<?php echo $temp['commNum'];?>)</span> </a>
 									</div>
 								</article>
 							<?php } ?>
 							
 							<nav id="nav_below" style="margin-top: 30px;">
-								<div class="pre_page pre">
-									<a href="javascript:;"> &lt;- Older posts </a>
+								<div class="pre">
+									<a href="javascript:;" class="pre_page"> &lt;- Older posts </a>
 								</div>
-								<div class="next_page pre">
-									<a href="javascript:;"> Newer posts -&gt; </a>
+								<div class="pre">
+									<a href="javascript:;" class="next_page" style="display:none;"> Newer posts -&gt; </a>
 								</div>
 							</nav>
 						</div>
@@ -157,7 +158,6 @@
 
 	<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="./js/jquery-ui.js"></script>
-	<script type="text/javascript" src="./js/json.js"></script>
 	<script type="text/javascript" src="./js/modules/init.js"></script>
 	<script type="text/javascript" src="./js/modules/indexMain.js"></script>
 	<script type="text/javascript" src="./js/animate.js"></script>

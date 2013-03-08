@@ -100,5 +100,25 @@
    	        }
    	        return $rows->findManyToManyRowset($matchTable,$intersectionTable,$callerRefRule,$matchRefRule);
    	   }
+   	   
+   	   /**
+   	    * To count the table rows number
+   	    * @param string $tablename       The sql table name
+   	    * @param string $field           The sql field
+   	    * @param resource $db            The database resource
+   	    * @return int                    The table column number
+   	    */
+   	   public function getTableCount($tablename, $db,$field=null){
+   	   	   if(!isset($tablename) || !isset($db)){
+   	   	   	   die("DatabaseUtils::getTableCount The tablename and db must be exsist!!");
+   	   	   }
+   	   	   if(!isset($field)){
+   	   	   	   $field = "*";
+   	   	   }
+   	   	   $result = $db->fetchOne(
+   	   	      "SELECT count(".$field.") from ".$tablename
+   	   	   );
+   	  	   return intval($result);
+   	   }
    }
 ?>

@@ -3,6 +3,10 @@
    class LogUtils{
    	   var $_fileName = null;
    	   
+   	   /**
+   	    * @param string $fileName  eg: windows  D:/LAMP/apache/logs/output.log
+   	    *                              linux    /home/linbin/Zend/output.log
+   	    */
    	   public function __construct($fileName="/home/linbin/Zend/output.log"){
    	      $this->_fileName = $fileName;	   
    	   }
@@ -37,7 +41,8 @@
    	   	   }
    	   }
    	   
-   	   //    $log = new LogUtils();
+   	   //    linux: $log = new LogUtils();
+   	   //    windows: $log = new LogUtils('D:/LAMP/apache/logs/output.log');
    	   //    for($i = 0;$i < count($newpage);$i++){
    	   //     	   $temp = $newpage[$i];
    	   //      	   $log->printObject($temp);
