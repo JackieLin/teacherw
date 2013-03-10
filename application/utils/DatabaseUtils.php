@@ -59,6 +59,21 @@
    	   }
    	   
    	   /**
+   	    * To update data to database
+   	    * @param object $table
+   	    * @param array $datas  datas {
+   	    *      'field' => 'value'
+   	    * }
+   	    * @return int
+   	    */
+   	   public function insert($table, $datas){
+   	   	    if(!isset($table) || !isset($datas)){
+   	   	    	die("DataBaseUtils::update  The table and datas must be exsist!!");
+   	   	    }  
+   	   	    
+   	   	    return $table->insert($datas);
+   	   }
+   	   /**
    	    * To change rowset to array
    	    * @param object $row    Zend_Db_table_rowset
    	    * @return array         The resultset(array)

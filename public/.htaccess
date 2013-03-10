@@ -10,7 +10,7 @@ RewriteCond %{HTTP_HOST} ^teacherw.sinaapp.com
 RewriteCond %{REQUEST_URI} !\/^main-.*\.html$
 RewriteRule ^(.*)\.html$ http://teacherw.sinaapp.com/$1/$1  [L,P]
 
-RewriteRule ^((index|main)\/)(.*\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm))$ $3 [L]
+RewriteRule ^((index|main|register)\/)(.*\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm))$ $3 [L]
 #RewriteRule ^(.*\/)(.*\/)(.*\.js|.*\.ico|.*\.gif|.*\.jpg|.*\.png|.*\.css|.*\.swf|.*\.flv|.*\.xml)$ $2$3 [L]
 RewriteRule ^(.*\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm))$ $1 [L] 
 #RewriteRule ^(.*)$ http://teacher.sinaapp.com/$1 [L,R=302]

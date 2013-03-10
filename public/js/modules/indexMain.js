@@ -86,7 +86,9 @@ Core.registerModule('indexmain', function(sb) {
 						next_style = next.style.display;
 						if(page !== 1){
 							next.style.display = "block";
-						} else{
+						} 
+						
+						if(!pre.onclick || !next.onclick){
 						    pre.onclick = function(event){
 						    	if(next_style === 'none'){
 						    		next_page[0].style.display = "block";

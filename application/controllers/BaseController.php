@@ -26,5 +26,18 @@
    	     require_once 'Zend/Db/Table.php';
    	     Zend_Db_Table::setDefaultAdapter($this->db);
    	  }
+   	  
+   	  /**
+   	   * To unset all the objects
+   	   * @param array $objs  The array of object that should be unset
+   	   */
+   	  public function unsetAll($objs){
+   	  	   if(!isset($objs)){
+   	  	   	    die("BaseController::unsetAll The objects param must be exsist!!");
+   	  	   }
+   	  	   foreach ($objs as $value){
+   	  	   	   unset($value);
+   	  	   }
+   	  }
    }
 ?>

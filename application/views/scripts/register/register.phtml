@@ -1,0 +1,114 @@
+<!--
+   @author linbin
+   @content The user register page
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>高校教师绩效考核系统</title>
+		<meta name="keywords" content="高校教师绩效考核系统" />
+		<meta name="description" content="高校教师绩效考核系统" />
+		<link rel="shortcut icon" href="./image/favicon.ico"/>
+		<link rel="stylesheet" href="./css/style.css" type="text/css" />
+		<script type="text/javascript" src="./js/Core.class.js"></script>
+		<script type="text/javascript" src="./js/SandBox.class.js"></script>
+	</head>
+	<body>
+		<!-- 处理背景  -->
+		<div class="logpdiv">
+			<div id="background" style="position: absolute; width:100%;height:100%">
+				<img style="width:100%;height:auto;" alt="background" />
+			</div>
+		</div>
+		
+		<!-- 首页正文部分-->
+		<div id="Content">
+			<section style="height: auto; width: 100%" id="page_data">
+				<div class="logpi">
+						<img src="./image/logo.png"/>
+				</div>
+				
+				<!--分隔線 -->
+				<div class="tran"></div>
+				<div class="reg_middle">
+					<h1>教师注册</h1>
+					<ul class="list">
+						<li>
+							<div>
+							   <i style="color: red;">*  </i>教师学号: 
+							</div>
+							<input type="text" class="text-size text-style" name="number" value=""/>
+							<span style="color: red;display: none;" name="number">学号不能为空!!</span>
+						</li>
+						<li>
+							<div>
+							   <i style="color: red;">*  </i>姓名: 
+							</div>
+							<input type="text" class="text-size text-style" name="name"/>
+							<span style="color: red;display: none;" name="name">姓名不能为空!!</span>
+						</li>
+						<li>
+							<div>
+							   <i style="color: red;">*  </i>设置密码: 
+							</div>
+							<input type="password" class="text-size text-style" name="password" />
+							<span style="color: red;display: none;" name="password">密码不能为空!!</span>
+						</li>
+						<li>
+							<div>
+							   <i style="color: red;">*  </i>昵称: 
+							</div>
+							<input type="text" class="text-size text-style" name="nickname"/>
+							<span style="color: red;display: none;" name="nickname">昵称不能为空!!</span>
+						</li>
+						<li>
+							<div>
+							   <i style="color: red;">*  </i>用户邮箱: 
+							</div>
+							<input type="text" class="text-size text-style" name="email"/>
+							<span style="color: red;display: none;" name="email">邮箱不能为空!!</span>
+						</li>
+						<li class="translation"></li>
+						<li style="padding-left: 200px;">
+							<input type="submit" class="register-type" value="注册" style="height: 40px;" />
+						</li>
+					</ul>
+					
+					<div class="direct">
+						<span>已有帐号，<a href="index.html">直接登录>></a></span>
+					</div>
+					<div class="clear"></div>
+					 <!-- 结尾部分-->
+					<footer style="margin-top: 50px;">
+						<div>
+							SCAU Copyright ©  2011华南农业大学.All rights reserved.
+						</div>
+						<div>
+							地址：广州市天河区五山华南农业大学
+						</div>
+						<div>
+							联系人:林滨     微博：<a href="http://weibo.com/dashilin" target="__blank">http://weibo.com/dashilin</a>
+						</div>
+					</footer>
+					<div style="height: 10px;"></div>
+				</div>
+			</section>
+		</div>
+		<div class="tran"></div>
+		
+		<!-- The loader image use css3-->
+		<div class="loader" style="top: 80%;">
+			<div class="circle circle1" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle2" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle3" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle4" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle5" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle6" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle7" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+			<div class="circle circle8" style="background-color:hsl(0, 0%, 0%);display: none;"></div>
+		</div>
+	</body>
+	<script type="text/javascript" src="./js/modules/init.js"></script>
+	<script src="./js/animate.js" type="text/javascript" charset="utf-8"></script>
+</html>

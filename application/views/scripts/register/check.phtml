@@ -1,0 +1,39 @@
+<!-- 
+   @author linbin
+   The page the check the role
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>高校教师绩效考核系统</title>
+		<meta name="keywords" content="高校教师绩效考核系统" />
+		<meta name="description" content="高校教师绩效考核系统" />
+		<link rel="shortcut icon" href="./image/favicon.ico"/>
+	</head>
+	<script type="text/javascript">
+          window.onload = function(){
+               var second = document.getElementById('second');
+               if(!second){
+                   return;
+               }
+               var int = setInterval(function(){
+                    var value = parseInt(second.innerHTML);
+                    if(value >= 1){
+                       second.innerHTML = --value;
+                    } else {
+                       location.href = "http://teacherw.sinaapp.com/index.html";
+                       clearInterval(int);
+                    }
+               }, 1000);
+          }
+	</script>
+	<body>
+	    <?php if($this->result === 'success'){ ?>
+	             <h3>验证登录成功,请等待<span id="second">3</span>秒自动跳转</h3>
+	             <p>如果没有跳转,请点击<a href="http://teacherw.sinaapp.com/index.html">这里</a></p>
+	    <?php } else { ?>
+	       <h3><?php echo $this->result; ?></h3>
+	    <?php } ?>
+	</body>
+</html>

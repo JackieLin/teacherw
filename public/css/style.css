@@ -129,15 +129,16 @@ ul li{
 }
 
 .check-size{
-	font-size: 25px;
-	width: 70%;
+	font-size: 20px;
+	width: 150px;
 }
 
 .check_init{
-	color: hsl(0, 0%, 50%);
+color: hsl(0, 0%, 50%);
     font-size: 20px;
 }
-.submit-type{
+
+.submit-type, .register-type{
    height: 40px;
    width: 140px;
    font-size: 25px;
@@ -166,6 +167,69 @@ footer{
 /*   background-color: #918597;*/
    opacity: 0.7;	
    z-index: 100;
+}
+
+
+.reg_middle{
+   height: auto;
+   background-color: hsl(48, 50%, 96%);
+   width: 1000px;
+   margin: 0 auto;
+   overflow: hidden;
+   -webkit-border-radius: 10px;
+   -moz-border-radius: 10px;
+   border-radius: 10px;
+   box-shadow: 10px 10px 5px #888888;
+}
+
+.reg_middle h1{
+	padding-left: 50px;
+	padding-top: 30px;
+	font-size: 40px;
+   	text-shadow: #888888 0px 0px 10px;
+}
+
+.list{
+	float: left;
+	width: 700px;
+	border-right: 2px solid #888888;
+	box-shadow: 10px 4px 15px #888888;
+}
+
+.list li{
+    margin-bottom: 30px;
+    font-size: 20px;
+    padding-top: 20px;
+}
+
+.list li div {
+	float: left;
+    text-align: right;
+    width: 150px;
+}
+
+.list li input{
+    font-size: 20px;
+    height: 30px;
+    margin-left: 40px;
+}
+
+.translation{
+    margin-top: 20px;
+    border-bottom: 2px solid #888888;	
+}
+
+.direct{
+    margin-top: 20px;
+    float: right;
+    width: 230px;
+    padding-top: 100px;
+    font-size: 20px;
+    text-shadow: #888888 0px 0px 10px;
+}
+
+.clear{
+	clear: both;
 }
 
 .circle{

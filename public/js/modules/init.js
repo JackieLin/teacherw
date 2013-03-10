@@ -36,17 +36,20 @@ Core.registerModule("Content", function(sb) {
 					// 添加验证码的点击事件
 					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage"),
 					    logButton = document.getElementsByClassName('submit-type'), divs = [],checkInit = sb.find('.check_init'),
-					    message = sb.find('.message');
+					    message = sb.find('.message'), registerButton = document.getElementsByClassName('register-type'),
+					    ch_email = /^[^\.@]+@([^\.@]+\.){1,}[a-z]+$/, ch_number = /^\d+$/g;
 					    /**
 					     * @returns cDiv array the array that warn user
 					     */
-					    check = function() {
+					    check = function(check_display) {
 							var inputs = document.getElementsByTagName('input'),  cDiv = [];
 							//init
-							checkInit.onfocus = function(){
-								if(checkInit.value === '学号/昵称'){
-									checkInit.value = '';
-									sb.removeClass(checkInit,'check_init');
+							if(checkInit){
+								checkInit.onfocus = function(){
+									if(checkInit.value === '学号/昵称'){
+										checkInit.value = '';
+										sb.removeClass(checkInit,'check_init');
+									}
 								}
 							}
 							
@@ -56,9 +59,9 @@ Core.registerModule("Content", function(sb) {
 									cDiv[name] = t.nextSibling.nextSibling;
 									// onblur event
 									t.onblur = function(event){
-										var value = event.srcElement.value, name = event.srcElement.name;
+										var value = event.currentTarget.value, name = event.currentTarget.name;
 										if(value === ""){
-											cDiv[name].style.display = "block";
+											cDiv[name].style.display = check_display;
 										}else{
 											cDiv[name].style.display = "none";
 										}
@@ -125,9 +128,50 @@ Core.registerModule("Content", function(sb) {
 						}
 						
 					}
-					// 用户点击事件
-					if(logButton){
-						divs = check();
+					
+					// 处理用户注册提交
+					if(registerButton && registerButton.length !== 0){
+						divs = check('inline');
+						var inputObj = document.getElementsByTagName('input'), email, number;
+						for(var i = 0,t;t = registerButton[i];i++){
+							t.onclick = function(){
+								// 验证邮箱以及学号的正确性
+								email = inputObj[4].value.match(ch_email);
+								number = inputObj[0].value.match(ch_number);
+								if(!email){
+									alert("邮箱格式有误,请重新输入!!");
+									return;
+								}
+								if(!number){
+									alert("学号应该全部是数字!!");
+									return;
+								}
+								var result = postData(divs),circles = document.getElementsByClassName('circle');
+								triggerCircles(circles);
+								// 提交数据
+								sb.ajax({
+									'type' : 'POST',
+									'url'  : 'register/registercomm',
+									'postdata' : result,
+									'success' : function(data){
+										triggerCircles(circles);
+										if(data === 'userexsist'){
+											alert("用户已存在,请用不同的学号重新注册");
+										}else if(data === "senderror"){
+											alert("邮件发送错误");
+										}else{
+											alert("验证邮件已发到对应邮箱,请到对应的邮箱确认");
+											location.href = "main.html";
+										}
+									}
+								});
+							}
+						}
+					}
+					
+					// 用户登录点击事件
+					if(logButton && logButton.length !== 0){
+						divs = check('block');
 						for(var i = 0,t; t = logButton[i];i++) {
 							    t.onclick = function(){
 							    	    var result = postData(divs), circles = document.getElementsByClassName('circle');
