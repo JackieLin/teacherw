@@ -37,7 +37,7 @@ Core.registerModule("Content", function(sb) {
 					var imageChange = document.getElementById('imagechange'), checkImage = document.getElementById("checkimage"),
 					    logButton = document.getElementsByClassName('submit-type'), divs = [],checkInit = sb.find('.check_init'),
 					    message = sb.find('.message'), registerButton = document.getElementsByClassName('register-type'),
-					    ch_email = /^[^\.@]+@([^\.@]+\.){1,}[a-z]+$/, ch_number = /^\d+$/g;
+					    ch_email = /^[^\.@]+@([^\.@]+\.){1,}[a-z]+$/, ch_number = /^\d+$/g,
 					    /**
 					     * @returns cDiv array the array that warn user
 					     */
@@ -84,10 +84,15 @@ Core.registerModule("Content", function(sb) {
 										result = "";
 										divs[name].style.display = "block";
 										return result;
-									}else{
+									} else{
 										divs[name].style.display = "none";
 										result += k.name + "=" + value + "&";
 									}
+							    } else if(type === 'checkbox'){
+							    	var checked = k.checked;
+							        if(checked){
+							        	result += k.name + "=" + value + "&";
+							        }
 							    }
 							}
 							result = result.substring(0,result.length - 1);
@@ -133,6 +138,7 @@ Core.registerModule("Content", function(sb) {
 					if(registerButton && registerButton.length !== 0){
 						divs = check('inline');
 						var inputObj = document.getElementsByTagName('input'), email, number;
+						
 						for(var i = 0,t;t = registerButton[i];i++){
 							t.onclick = function(){
 								// 验证邮箱以及学号的正确性
@@ -172,6 +178,19 @@ Core.registerModule("Content", function(sb) {
 					// 用户登录点击事件
 					if(logButton && logButton.length !== 0){
 						divs = check('block');
+						var arr = sb.getcookie('user'), filter = /\W+(\w+)\W+/, result = [], 
+						inputs = document.getElementsByTagName('input'), elems = [inputs[0], inputs[1]], temp;
+						// 如果cookie存在,添加cookie
+						if(!arr[elems[0].name]){
+	                        for(var str in arr){
+	                           	temp = str.match(filter);
+	                           	result[temp[1]] = arr[str];
+	                        }	
+	                    }
+						if(result[elems[0].name]){
+	                        sb.fillFrom(result, elems);
+						}
+                        
 						for(var i = 0,t; t = logButton[i];i++) {
 							    t.onclick = function(){
 							    	    var result = postData(divs), circles = document.getElementsByClassName('circle');
@@ -192,12 +211,8 @@ Core.registerModule("Content", function(sb) {
 													}else{
 														alert(data);
 													}
-//													message = document.getElementById('message');
-//													message.innerHTML = data;
 												}
 			 								});
-	//	    								logForm.action = "index/login";
-	//										logForm.submit();
 							    	    }
 							    }
 							}	

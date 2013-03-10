@@ -4,6 +4,8 @@ require_once APPLICATION_PATH.'/utils/ImageUtils.php';
 require_once 'BaseController.php';
 require_once APPLICATION_PATH.'/utils/DatabaseUtils.php';
 require_once APPLICATION_PATH.'/utils/LogUtils.php';
+require_once APPLICATION_PATH.'/utils/CookieUtils.php';
+
 class IndexController extends BaseController
 {
     public function init()
@@ -59,6 +61,38 @@ class IndexController extends BaseController
            $userSession->user = $user;
            $userSession->roleNames = $roleNames;
 
+           // 将记录保存到cookie
+           $hascookie = $request->getParam("check");
+           $hascookie = $hascookie[0];
+           $cookie = null;
+           if($hascookie === 'on'){
+           	    if(!isset($cookie)){
+           	        $cookie = new CookieUtils();
+           	    }
+           	    $cookie->setName('user[name]');
+           	    $cookie->setValue($name);
+           	    $cookie->setExpire(time() + 60*60*24*7);
+           	    $cookieState = $cookie->setCookie();
+           	    $cookie->setName("user[password]");
+           	    $cookie->setValue($password);
+           	    $cookie->setCookie();
+           } else{
+           	   // 清除cookie
+           	   if(isset($_COOKIE['user']) && isset($_COOKIE['user']['name'])){
+           	   	   if(!isset($cookie)){
+           	   	   	   $cookie = new CookieUtils();
+           	   	   }
+           	   	   $cookie->setName('user[name]');
+           	   	   $cookie->setValue('');
+           	   	   $cookie->setExpire(-3600);
+           	   	   $cookie->setCookie();
+           	   	   $cookie->setName('user[password]');
+           	   	   $cookie->setValue('');
+           	   	   $cookie->setExpire(-3600);
+           	   	   $cookie->setCookie();
+           	   }
+           }
+           
            echo 'success';
            $this->_helper->viewRenderer->setNoRender(true);
            return;

@@ -177,5 +177,39 @@ var SandBox = (function() {
 		this.core.ajax(data);
 	};
 
+	/**
+	 * 
+	 * @param string reg      cookie regexp
+	 * @return array          when the cookie result
+	 */
+	SandBox.prototype.getcookie = function(reg){
+		if(!reg){
+			this.core.log("The cookie name is not exsist");
+		}
+		var cookies = document.cookie, arr = cookies.split('; '), result = [], temp;
+		for(var i = 0, t; t = arr[i]; i++){
+			
+			if(t.indexOf(reg) >= 0){
+				temp = t.split('=');
+				result[temp[0]] = temp[1];
+			}
+		}
+		return result;
+	};
+	
+	/**
+	 * fill the cookie to the elements
+	 * @param array cookies    cookie name
+	 * @param array elems      The input elements
+	 */
+	SandBox.prototype.fillFrom = function(cookies, elems){
+		if(!cookies || !elems){
+			this.core.log("the cookies and elements should be exsist");
+		}
+		for(var i = 0, t; t = elems[i]; i++){
+			t.value = cookies[t.name];
+		}
+	};
+	
 	return SandBox;
 })();
