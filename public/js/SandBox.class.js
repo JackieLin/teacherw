@@ -211,5 +211,9 @@ var SandBox = (function() {
 		}
 	};
 	
+	SandBox.prototype.getLocation = function(url, datas){
+		return this.core.getLocation(url, datas);
+	};
+	
 	return SandBox;
 })();

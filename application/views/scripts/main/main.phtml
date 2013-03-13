@@ -58,14 +58,14 @@
 							    <?php if($this->user['avater'] === '暂无'){ ?>
 								  <img src="./image/default.jpg" alt="defaultImage"/>
 								<?php } else { ?>
-								  <img src=<?php echo $this->user['avater']; ?> alt="defaultImage"/>
+								  <img src="main/image?path=<?php echo $this->user['avater']; ?>" alt="defaultImage"/>
 								<?php }?>
 								<div class="nick">
 									<?php echo $this->user['nickname'];?>
 								</div>
 								<div class="clear"></div>
 								<div class="sit">
-									<a href="javascript:;">编辑资料</a>
+									<a href="main/message">编辑资料</a>
 								</div>
 							</div>
 							<div class="clear"></div>

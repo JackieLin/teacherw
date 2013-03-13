@@ -1,0 +1,278 @@
+<!--
+@author linbin
+The register page
+-->
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>高校教师绩效考核系统</title>
+		<meta name="keywords" content="高校教师绩效考核系统"/>
+		<meta name="description" content="高校教师绩效考核系统"/>
+		<link rel="shortcut icon" href="./image/favicon.ico" />
+		<link rel="stylesheet" href="./css/jquery-ui.css" />
+		<link rel="stylesheet" href="./css/style.css" />
+		<link rel="stylesheet" href="./css/main.css" />
+		<script type="text/javascript" src="./js/Core.class.js"></script>
+		<script type="text/javascript" src="./js/SandBox.class.js"></script>
+		<script type="text/javascript" src="./js/JsonUtils.class.js"></script>
+	</head>
+	<body>
+		<!-- the background-->
+		<div class="logpdiv">
+			<div id="background" style="position: absolute; width:100%;height:100%">
+				<img style="width:100%;height:auto;" alt="background" src="./image/theme/lake.jpg"/>
+			</div>
+		</div>
+
+		<!-- the header element-->
+		<header>
+			<div id="logo" class="logo">
+				<ul id="nav" style="float:left;">
+					<li>
+						fsdfsdfs
+					</li>
+					<li>
+						afsdfsdfd
+					</li>
+					<li>
+						fsdfsfwsrewfs
+					</li>
+				</ul>
+				<input type="text" name="search" value="搜索" />
+				<div>
+					欢迎您：<?php echo $this->user['name'];?>老师
+				</div>
+			</div>
+		</header>
+		<div class="tran" style="height: 80px;"></div>
+
+		<div class="middle">
+			<div class="contain2">
+				<div class="contain1" id="register">
+					<div id="left">
+						<!-- 头像部分-->
+						<div class="top" style="float: left;">
+							 <?php if($this->user['avater'] === '暂无'){ ?>
+								  <img src="./image/default.jpg" alt="defaultImage"/>
+							 <?php } else { ?>
+								  <img src="image?path=<?php echo $this->user['avater']; ?>" alt="defaultImage"/>
+							 <?php }?>
+							<div class="nick">
+								<?php echo $this->user['nickname'];?>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class="clear"></div>
+						<div id="scroll" class="dis">
+							<div class="clear">
+								<a class="toTop" href="#top">Totop</a>
+							</div>
+							<div class="bottom" id="reel">
+								<nav class="information">
+									<li class="info_tit">
+										<a href="javascript:void(0);"><span>个人资料</span></a>
+									</li>
+									<li class="info_con">
+										<div>
+											<a href="#midContent" class="link">基本资料</a>
+										</div>
+									</li>
+<!-- 									<li class="info_con">
+										<div>
+											<a href="#"><span>头像信息</span></a>
+										</div>
+									</li> -->
+									<li class="info_con">
+										<div>
+											<a href="#"><span>教育信息</span></a>
+										</div>
+									</li>
+									<li class="info_con">
+										<div>
+											<a href="#"><span>工作信息</span></a>
+										</div>
+									</li>
+								</nav>
+							</div>
+						</div>
+					</div>
+					<div id="Content">
+						<div id="page_data">
+							<div id="middle">
+								<div class="mid_contain">
+									<div class="mid_title">
+										亲爱的<b><?php echo $this->user['nickname'];?></b>，请填写真实的资料
+									</div>
+									<ul class="mid_content" style="display: block;" id="midContent">
+										<li>
+											<label for="" class="mid_content_left">当前头像: </label>
+											<div class="mid_content_contain">
+												<?php if($this->user['avater'] === '暂无'){ ?>
+								                   <img src="./image/default.jpg" alt="defaultImage"/>
+							                    <?php } else { ?>
+								                   <img src="image?path=<?php echo $this->user['avater']; ?>" alt="defaultImage"/>
+							                    <?php }?>
+											</div>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">真实姓名: </label>
+											<span class="mid_content_contain"><?php echo $this->user['name']; ?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">性别: </label>
+											<span class="mid_content_contain"><?php echo ($this->user['gender']==='0')? '男': '女'; ?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">学院: </label>
+											<span class="mid_content_contain"><?php echo $this->user['college'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">身份: </label>
+											<span class="mid_content_contain"><?php echo $this->user['post'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">主修专业: </label>
+											<span class="mid_content_contain"><?php echo $this->user['specialty'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">教学课程: </label>
+											<span class="mid_content_contain"><?php echo $this->user['tutorial'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">地址: </label>
+											<span class="mid_content_contain"><?php echo $this->user['office'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">联系电话: </label>
+											<span class="mid_content_contain"><?php echo $this->user['contact'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">生日: </label>
+											<span class="mid_content_contain"><?php echo $this->user['birthday'];?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">现居住地: </label>
+											<span class="mid_content_contain"><?php echo $this->user['living']; ?></span>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">家乡: </label>
+											<span class="mid_content_contain"><?php echo $this->user['bornplace']; ?></span>
+										</li>
+										<li class="tran" style="border-bottom: hsl(0, 0%, 70%) solid 2px;"></li>
+										<li>
+											<input type="submit" id="savebutton" class="update-type" value="修改" />
+										</li>
+									</ul>
+                                    
+									<ul class="mid_content" style="display: none;" id="midContent">
+									<form action="/main/commit" enctype="multipart/form-data" method="post">
+										<li>
+											<label for="" class="mid_content_left">当前头像: </label>
+											<div class="mid_content_contain">
+												<?php if($this->user['avater'] === '暂无'){ ?>
+								                   <img src="./image/default.jpg" alt="defaultImage"/>
+							                    <?php } else { ?>
+								                   <img src="image?path=<?php echo $this->user['avater']; ?>" alt="defaultImage"/>
+							                    <?php }?>
+												换头像: <input type="file" name="image" value="upload" style="margin-left: 40px;" />
+												<input name="nickname" value="<?php echo $this->user['nickname']; ?>" style="display: none;"/>
+											</div>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">真实姓名: </label>
+											<input type="text" class="mid_content_contain" name="name" value="<?php echo $this->user['name']; ?>" />
+										</li>
+										<li>
+											<label for="" class="mid_content_left">性别: </label>
+											<input type="radio" value="male" name="gender"/>
+											男
+											<input type="radio" value="female" name="gender" style="margin-left: 20px;"/>
+											女
+										</li>
+										<li>
+											<label for="" class="mid_content_left">学院: </label>
+										    <input type="text" class="mid_content_contain" name="college" value="<?php echo $this->user['college']; ?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">身份: </label>
+											<input type="text" class="mid_content_contain" name="post" value="<?php echo $this->user['post'];?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">主修专业: </label>
+											<input type="text" class="mid_content_contain" name="specialty" value="<?php echo $this->user['specialty'];?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">教学课程: </label>
+											<input type="text" class="mid_content_contain" name="tutorial" value="<?php echo $this->user['tutorial'];?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">地址: </label>
+											<input type="text" class="mid_content_contain" name="office" value="<?php echo $this->user['office'];?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">联系电话: </label>
+											<input type="text" class="mid_content_contain" name="contact" value="<?php echo $this->user['contact'];?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">生日: </label>
+											<input type="text" id="datepicker" name="birthday" class="mid_content_contain" style="font-size: 15px;" value="<?php echo $this->user['birthday']; ?>"/>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">现居住地: </label>
+											<select name="live[]" id="live_prodvince" style="width: 100px;">
+												<option>省</option>
+											</select>
+											<select name="live[]" id="live_city" style="width: 100px;">
+												<option>市</option>
+											</select>
+											<select name="live[]" id="live_area" style="width: 100px;">
+												<option>区</option>
+											</select>
+										</li>
+										<li>
+											<label for="" class="mid_content_left">家乡: </label>
+											<select name="home[]" id="home_prodvince" style="width: 100px;">
+												<option>省</option>
+											</select>
+											<select name="home[]" id="home_city" style="width: 100px;">
+												<option>市</option>
+											</select>
+											<select name="home[]" id="home_area" style="width: 100px;">
+												<option>区</option>
+											</select>
+										</li>
+										<li class="tran" style="border-bottom: hsl(0, 0%, 70%) solid 2px;"></li>
+										<li>
+											<input type="submit" class="save-type" value="保存" />
+										</li>
+										</form>
+									</ul>
+                                   
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 结尾部分-->
+		<footer>
+			<div>
+				SCAU Copyright ©  2011华南农业大学.All rights reserved.
+			</div>
+			<div>
+				地址：广州市天河区五山华南农业大学
+			</div>
+			<div>
+				联系人:林滨     微博：<a href="http://weibo.com/dashilin" target="__blank">http://weibo.com/dashilin</a>
+			</div>
+		</footer>
+	</body>
+	<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-ui.js"></script>
+	<script type="text/javascript" src="./js/modules/init.js"></script>
+	<script type="text/javascript" src="./js/modules/register.js"></script>
+	<script type="text/javascript" src="./js/animate.js"></script>
+</html>

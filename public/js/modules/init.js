@@ -167,7 +167,7 @@ Core.registerModule("Content", function(sb) {
 											alert("邮件发送错误");
 										}else{
 											alert("验证邮件已发到对应邮箱,请到对应的邮箱确认");
-											location.href = "main.html";
+											location.href = "index.html";
 										}
 									}
 								});

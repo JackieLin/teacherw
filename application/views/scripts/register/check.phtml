@@ -22,7 +22,7 @@
                     if(value >= 1){
                        second.innerHTML = --value;
                     } else {
-                       location.href = "http://teacherw.sinaapp.com/index.html";
+                       location.href = "<?php echo $this->url;?>";
                        clearInterval(int);
                     }
                }, 1000);
@@ -30,8 +30,8 @@
 	</script>
 	<body>
 	    <?php if($this->result === 'success'){ ?>
-	             <h3>验证登录成功,请等待<span id="second">3</span>秒自动跳转</h3>
-	             <p>如果没有跳转,请点击<a href="http://teacherw.sinaapp.com/index.html">这里</a></p>
+	             <h3>成功,请等待<span id="second">3</span>秒自动跳转</h3>
+	             <p>如果没有跳转,请点击<a href="<?php echo $this->url;?>">这里</a></p>
 	    <?php } else { ?>
 	       <h3><?php echo $this->result; ?></h3>
 	    <?php } ?>

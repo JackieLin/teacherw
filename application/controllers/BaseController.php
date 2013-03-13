@@ -28,6 +28,21 @@
    	  }
    	  
    	  /**
+   	   * 从application.ini中取出对应属性的参数
+   	   * @param string $attr
+   	   * @param string $param
+   	   * @return string
+   	   */
+   	  public function getIniParam($attr, $param){
+   	  	 if(!isset($this->url)){
+   	  	 	$this->url = constant("APPLICATION_PATH").DIRECTORY_SEPARATOR.'configs'.DIRECTORY_SEPARATOR.'application.ini';
+   	  	 }
+   	  	 $config = new Zend_Config_Ini($this->url, $attr);
+   	  	 $config = $config->toArray();
+   	  	 return $config[$param];
+   	  }
+   	  
+   	  /**
    	   * To unset all the objects
    	   * @param array $objs  The array of object that should be unset
    	   */

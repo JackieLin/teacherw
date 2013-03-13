@@ -167,7 +167,8 @@ var Core = (function() {
 		 * 'url': string 'success': function}
 		 */
 		ajax : function(data) {
-			var type = data['type'], postdata = data['postdata'], url = data['url'], successFun = data['success'], xmlHttp;
+			var type = data['type'], postdata = data['postdata'], url = data['url'], successFun = data['success'], xmlHttp
+			, async = arguments[1];
 
 			if (!data || !type || !url || !successFun) {
 				this
@@ -192,9 +193,13 @@ var Core = (function() {
 					// call the success function
 					successFun.call(this, xmlHttp.responseText);
 				}	
+			};
+			// 设置同步或异步
+			if(async === false){
+				xmlHttp.open(type, url, async); 
+			} else{
+				xmlHttp.open(type, url, true);	
 			}
-			
-			xmlHttp.open(type, url, true);
 			if (postdata) {
 				xmlHttp.setRequestHeader("Content-type",
 						"application/x-www-form-urlencoded");
@@ -202,6 +207,38 @@ var Core = (function() {
 			} else {
 				xmlHttp.send();
 			}
+		},
+		
+		/**
+		 * To return the location by url
+		 * @param url            The json path
+		 * @param datas          eg: {location:'', type: ''}
+		 * @returns array
+		 */
+		getLocation: function(url, datas){
+			if(!url || !datas){
+				this.log("The url and datas must be exsist!!");
+			}
+			var type = datas.type, location = datas.location, result = null;
+			// To get json
+		    this.ajax({
+		    	'type': 'GET',
+		    	'url': url,
+		    	'success': function(data){
+		    		// 转换为对象
+		    		obj = JSON.parse(data);
+		    		switch (type) {
+					case 'province':
+						result = obj[type];
+						break;
+
+					default:
+						result = obj[type][location]
+						break;
+					}
+		    	}
+		    }, false);
+		    return result;
 		},
 		
 		/**
@@ -213,5 +250,5 @@ var Core = (function() {
 		log : function(message) {
 			alert("log= " + message);
 		}
-	}
+	};
 })();

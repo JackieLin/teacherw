@@ -73,6 +73,28 @@
    	   	    
    	   	    return $table->insert($datas);
    	   }
+   	   
+   	   /**
+   	    * 插入数据
+   	    * @param object $table          The table object
+   	    * @param resource $db           The database adapter   
+   	    * @param array $set             set {'field' => 'data'}
+   	    * @param array|null $where      where {'field' => 'data'}
+   	    * @return int                   The effect result row
+   	    */
+   	   public function update($table, $db, $set, $where=null){
+   	   	   if(!isset($table, $set)){
+   	   	   	  die("DatabaseUtils::updata The table and set must be exsist!!");
+   	   	   }
+   	   	   $dwhere = null;
+   	   	   if(isset($where)){
+   	   	   	   foreach ($where as $key => $value){
+   	   	   	   	  $dwhere .= $db->quoteInto("$key = ?", $value);
+   	   	   	   }
+   	   	   }
+   	   	   
+   	   	   return $table->update($set, $dwhere);
+   	   }
    	   /**
    	    * To change rowset to array
    	    * @param object $row    Zend_Db_table_rowset

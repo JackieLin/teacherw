@@ -67,6 +67,26 @@
         public function checkAction(){
         	$number = $this->_registerRequest->getParam("number");
         	$checkcode = $this->_registerRequest->getParam('checkcode');
+        	$commit = $this->_registerRequest->getParam("result");
+        	
+        	if(isset($commit)){
+        		$this->view->assign('url', 'http://teacherw.sinaapp.com/main.html');
+        	   	if($commit === 'oversize'){
+        	   		$this->view->assign("result", '图片大小超过范围,最大为3M');
+        	   		return;
+        	   	} else if($commit === 'typeerror'){
+        	   		$this->view->assign("result", "图片类型错误,应为jpg格式");
+        	   		return;
+        	   	} else if($commit === 'error'){
+        	   		$this->view->assign("result", "图片上传出错,请重新上传");
+        	   		return;
+        	   	} else if($commit === 'success'){
+        	   		$this->view->assign("result", "success");
+        	   		return;
+        	   	}
+        	}
+        	
+        	$this->view->assign('url', 'http://teacherw.sinaapp.com/index.html');
         	if(md5($number) !== $checkcode){
         		$this->view->assign("result",'验证链接有误,请重新输入');
         		return;
