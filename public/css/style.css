@@ -232,6 +232,82 @@ footer{
 	clear: both;
 }
 
+.arti_left{
+   position: relative;
+   background-color: hsl(0, 0%, 100%);
+   left: 10%;
+   width: 75%;
+   height: auto;
+   text-align: left;
+   -webkit-box-shadow: 10px 4px 15px #888888;
+   box-shadow: 10px 4px 15px #888888;
+   text-shadow: #888888 0px 0px 10px;
+}
+
+.article_tran{
+	padding: 10px 20px 5px;
+	font-size: 13px;
+	color: #999999;
+}
+
+.comm_title{
+    font-size: 25px;
+    margin: 0 auto;
+    position: relative;
+    left: 40%;
+    padding-top: 15px;
+}
+
+.commit_content{
+    padding-left: 50px;	
+}
+
+.commit_content_top{
+   height: 100%;
+   margin-top: 20px;
+   overflow: hidden;
+}
+
+
+.commit_content_top > img{
+   float: left;
+}
+
+.commit_content_top > span{
+   margin-left: 20px;
+   color: #999999;
+   font-size: 15px;
+}
+
+.commit_content_top > div{
+   margin-left: 75px;
+   margin-top: 5px;
+   font-size: 20px;	
+}
+
+.self_commit_content_left{
+   float: left;
+   padding-left: 100px;
+   margin-top: 20px;	
+}
+
+.self_commit_content_right{
+	float: right;
+	margin-top: 20px;
+	padding-right: 300px;
+	margin-top: 20px;
+}
+
+.commit-button{
+   margin: 0 auto;
+   width: 80%;
+   position: relative;
+   left: 10%;
+   height: 40px;
+   font-size: 20px;
+   background-color: hsl(206, 67%, 47%);	
+}
+
 .circle{
 	width: 15px;
 	height: 15px;

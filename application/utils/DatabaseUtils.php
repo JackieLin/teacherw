@@ -16,8 +16,6 @@
    	    * @return object|array $row the result set about the table
    	    */
    	   public function fetchData($table,$db,$datas,$flag='row'){
-   	   	   $logs = new LogUtils('/home/linbin/Zend/output.log');
-   	   	   
    	   	   //$type = var_dump($datas); 
    	   	   $length = count($datas);
    	   	   $where = null;

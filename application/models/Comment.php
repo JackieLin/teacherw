@@ -12,7 +12,7 @@
    	        news => array(
    	            'columns' => array('new_id'),
    	        	'refTableClass' => 'News',
-   	        	'refColumns' => 'id',
+   	        	'refColumns' => array('id'),
    	        	'onDelete' => self::CASCADE,
    	        	'onUpdate' => self::RESTRICT
    	        )

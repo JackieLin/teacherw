@@ -1,0 +1,114 @@
+<!--
+   @author linbin
+   The page the show article and comments
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>高校教师绩效考核系统</title>
+		<meta name="keywords" content="高校教师绩效考核系统" />
+		<meta name="description" content="高校教师绩效考核系统" />
+		<link rel="shortcut icon" href="./image/favicon.ico" />
+		<link rel="stylesheet" href="./css/style.css" />
+		<script type="text/javascript" src="./js/Core.class.js"></script>
+		<script type="text/javascript" src="./js/SandBox.class.js"></script>
+	</head>
+	<body>
+		<!-- 处理背景  -->
+		<div class="logpdiv">
+			<div id="background" style="position: absolute; width:100%;height:100%;background-color: hsl(0, 0%, 93%);">
+			</div>
+		</div>
+		
+		<div id="Content">
+			<article style="width: 100%; height:100%;" id="page_data">
+				<div class="data">
+					<div class="logpi">
+						<img src="./image/logo.png"/>
+					</div>
+				</div>
+				
+				<div class="tran"></div>
+				
+				<!-- 网页正文左部模块-->
+				<section id="article_left" class="arti_left">
+			        
+					<!-- 正文部分-->
+					<article id="article_content" style="padding-top: 10px;">
+					    <h2 style="text-align: center;"><?php echo $this->article["title"]; ?></h2>
+					    <?php echo $this->article["content"]; ?>	
+					</article>
+					<div class="article_tran" style="background-color: hsl(0, 0%, 93%);">
+						<span></span>
+						<input style="display: none;" value="<?php echo date_timestamp_get(new DateTime($this->article['time']));?>" />
+					</div>
+					<!-- 评论模块-->
+					<div class="commit">
+					    <div class="comm_title">Comments</div>
+					    <!-- 分割线-->
+					    <div style="border-bottom: 2px dashed #888888; margin-top: 10px;"></div>'
+					    <?php  $comments = $this->comment;  
+					           if(count($comments) === 0) { ?>
+					               <div style="padding-left: 30px;">暂无</div>
+					    <?php  } else{ ?>
+					    <?php  
+					           foreach ($comments as $comment){ ?>
+								    <div class="commit_content">
+								    	<div class="commit_content_top">
+								    	<?php if($comment['image'] === '暂无') {?>
+								    		<img src="./image/default.jpg" alt="image" style="width: 50px; height: 50px;" />
+								    	<?php } else { ?>
+								    	    <img src="main/image?path=<?php echo $comment['image']; ?>" alt="image" style="width: 50px; height: 50px;" />
+								    	<?php }?>
+								    		<span></span>
+								    		<input type="text" value="<?php echo date_timestamp_get(new DateTime($comment['time'])); ?>" style="display: none;" />
+								    		<div><?php echo $comment["author"]; ?> said .....</div>
+								    	</div>
+								    	
+								    	<div style="margin-top: 10px;"><?php echo $comment["content"]; ?></div>
+								    </div>
+					    <?php   }
+					          } ?>
+					    <div style="border-bottom: 2px solid #888;margin-top: 40px;"></div>
+					    <!-- 填写评论部分 -->
+					    <div class="self_commit" style="overflow: hidden;">
+					        <form method="post" id="commentform">
+						    	<div class="comm_title">LEAVE A COMMENT</div>
+						    	<div class="self_commit_content_left">
+						    		Your commit content:
+						    		<textarea id="text" name="text" cols="80" rows="10" style="display: block;margin-top: 10px;"></textarea>
+						    	</div>
+						    	<div class="clear" style="margin-bottom: 20px;"></div>
+						    	<input name="nickname" value="<?php echo $this->nickname; ?>" style="display: none;"/>
+						    	<input name="id" value="<?php echo $this->id; ?>" style="display: none;"/>
+						    	<input name="image" value="<?php echo $this->image; ?>" style="display: none;"/>
+						    	<input id="addcomment" type="button" value="commit" class="commit-button"/>
+					    	</form>
+					    </div>
+					    <div class="tran"></div>
+					</div>
+					
+				</section>
+				
+			</article>
+		</div>
+		
+		<!-- 结尾部分-->
+		<footer>
+			<div>
+				SCAU Copyright ©  2011华南农业大学.All rights reserved.
+			</div>
+			<div>
+				地址：广州市天河区五山华南农业大学
+			</div>
+			<div>
+				联系人:林滨     微博：<a href="http://weibo.com/dashilin" target="__blank">http://weibo.com/dashilin</a>
+			</div>
+		</footer>
+	</body>
+	<script type="text/javascript" src="./js/modules/article.js"></script>
+	<script type="text/javascript">
+        Core.start('article');
+	</script>
+</html>

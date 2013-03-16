@@ -8,7 +8,14 @@ RewriteRule ^main-news(.*)\.html$ main.html?page=$1
 
 RewriteCond %{HTTP_HOST} ^teacherw.sinaapp.com
 RewriteCond %{REQUEST_URI} !\/^main-.*\.html$
+RewriteCond %{REQUEST_URI} !\/article.*\.html$
 RewriteRule ^(.*)\.html$ http://teacherw.sinaapp.com/$1/$1  [L,P]
+
+RewriteCond %{REQUEST_URI} ^\/article-.*\.html$
+RewriteRule ^article-(.*)\.html$ article.html?id=$1
+
+RewriteCond %{REQUEST_URI} ^\/article\.html$
+RewriteRule ^(.*)\.html$ http://teacherw.sinaapp.com/main/$1  [L,P]
 
 RewriteRule ^((index|main|register)\/)(.*\.(js|ico|gif|jpg|png|css|swf|flv|xml|htm))$ $3 [L]
 #RewriteRule ^(.*\/)(.*\/)(.*\.js|.*\.ico|.*\.gif|.*\.jpg|.*\.png|.*\.css|.*\.swf|.*\.flv|.*\.xml)$ $2$3 [L]

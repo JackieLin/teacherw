@@ -4,6 +4,7 @@ require_once APPLICATION_PATH . '/utils/LogUtils.php';
 require_once 'BaseController.php';
 require_once APPLICATION_PATH . '/models/Links.php';
 require_once APPLICATION_PATH . '/models/News.php';
+require_once APPLICATION_PATH . '/models/Comment.php';
 require_once APPLICATION_PATH . '/utils/FileUploadUtils.php';
 require_once APPLICATION_PATH.'/models/User.php';
 
@@ -170,6 +171,55 @@ class MainController extends BaseController {
 		}
 		echo $encode;
 		$this->_helper->viewRenderer->setNoRender ( true );
+	}
+	
+	
+	public function articleAction(){
+		$id = $this->_pagerequest->getParam("id");
+		$result = array();
+		// 从数据库取出数据
+		$new = new News();
+		$resultset = $this->_database->fetchData($new, $this->db, array('id' => $id));
+	    foreach ($resultset as $key => $value){
+	    	$result[$key] = $value;
+	    }
+	    parent::unsetAll(array($resultset, $new));
+	    $this->view->assign("article", $result);
+	    // 取出对应的评论
+	    $comment = new Comment();
+	    $commentset = $this->_database->fetchData($comment, $this->db, array('new_id' => $id), 'all');
+	    $commentresult = array();
+	    
+	    for($i = 0; $i < $commentset->count(); $i++){
+	       	$temp = $commentset[$i];
+	       	foreach ($temp as $key => $value){
+	       		if($key === 'image' && (!isset($value) || $value === '')){
+	       			$commentresult[$i][$key] = '暂无';
+	       		} else{
+	       			$commentresult[$i][$key] = $value;
+	       		}
+	       	}
+	    }
+	    $this->view->assign("comment", $commentresult);
+	    $this->view->assign("id", $id);
+	    $this->view->assign("image", $this->_user['avater']);
+	    $this->view->assign("nickname", $this->_user['nickname']);
+	    parent::unsetAll(array($comment, $commentresult, $commentset));
+	}
+	
+	public function addcommentAction(){
+	     $id = $this->_pagerequest->getParam("id");
+	     $nickname = $this->_pagerequest->getParam("nickname");
+	     $image = $this->_pagerequest->getParam("image");
+	     $content = $this->_pagerequest->getParam("text");
+         $time = date('Y-m-d H:i:s');
+         
+	     // insert the record
+	     $comment = new Comment();
+	     $datas = array('author' => $nickname, 'image' => $image, 'content' => $content,
+	     		 'time' => $time, 'new_id' => $id);
+	     $this->_database->insert($comment, $datas);
+	     $this->_redirect("article-$id.html");
 	}
 	
 	/**
