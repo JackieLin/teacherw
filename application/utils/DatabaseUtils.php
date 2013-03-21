@@ -87,7 +87,11 @@
    	   	   $dwhere = null;
    	   	   if(isset($where)){
    	   	   	   foreach ($where as $key => $value){
-   	   	   	   	  $dwhere .= $db->quoteInto("$key = ?", $value);
+   	   	   	   	  if(!isset($dwhere)){
+   	   	   	   	  	  $dwhere = $db->quoteInto("$key = ?", $value);
+   	   	   	   	  }else{
+   	   	   	   	      $dwhere .= $db->quoteInto(" AND $key = ?", $value);
+   	   	   	   	  }
    	   	   	   }
    	   	   }
    	   	   

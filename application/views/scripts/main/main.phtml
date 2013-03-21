@@ -4,108 +4,125 @@
 -->
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-		<title>高校教师绩效考核系统</title>
-		<meta name="keywords" content="高校教师绩效考核系统"/>
-		<meta name="description" content="高校教师绩效考核系统"/>
-		<link rel="shortcut icon" href="./image/favicon.ico" />
-		<link rel="stylesheet" href="./css/style.css" />
-		<link rel="stylesheet" href="./css/main.css" />
-		<!-- jquery ui-->
-		<link rel="stylesheet" href="./css/jquery-ui.css" />
-		<script type="text/javascript" src="./js/Core.class.js"></script>
-		<script type="text/javascript" src="./js/SandBox.class.js"></script>
-	</head>
-	<body>
-		<!-- the background-->
-		<div class="logpdiv">
-			<div id="background" style="position: absolute; width:100%;height:100%">
-				<img style="width:100%;height:auto;" alt="background" />
-			</div>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>高校教师绩效考核系统</title>
+<meta name="keywords" content="高校教师绩效考核系统" />
+<meta name="description" content="高校教师绩效考核系统" />
+<link rel="shortcut icon" href="./image/favicon.ico" />
+<link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/main.css" />
+<!-- jquery ui-->
+<link rel="stylesheet" href="./css/jquery-ui.css" />
+<script type="text/javascript" src="./js/Core.class.js"></script>
+<script type="text/javascript" src="./js/SandBox.class.js"></script>
+</head>
+<body>
+	<!-- the background-->
+	<div class="logpdiv">
+		<div id="background"
+			style="position: absolute; width: 100%; height: 100%">
+			<img style="width: 100%; height: auto;" alt="background" />
 		</div>
+	</div>
 
-		<!-- the header element-->
-		<header>
-			<div id="logo" class="logo">
-				<ul id="nav" style="float:left;">
-					<li>
-						fsdfsdfs
-					</li>
-					<li>
-						afsdfsdfd
-					</li>
-					<li>
-						fsdfsfwsrewfs
-					</li>
+	<!-- the header element-->
+	<header>
+		<div id="logo" class="logo">
+			<ul id="nav" style="float: left; color: white;" class="pre">
+				  <?php
+						
+$navs = $this->navigation;
+						for($i = 0; $i < count ( $navs ); $i ++) {
+							$nav = $navs [$i];
+							?>
+							<li><a style="color: white;" href="<?php echo $nav['url']; ?>"><?php echo $nav['title']; ?></a>
+				</li>
+				  <?php }?>
 				</ul>
-				<input type="text" name="search" value="搜索" />
-				<div>
+			<input type="text" name="search" value="搜索" />
+			<div>
 					欢迎您：<?php echo $this->user['name']; ?>老师 
 				</div>
-			</div>
-		</header>
-		<div class="tran" style="height: 80px;"></div>
-		<!-- the content element it contains by three parts-->
-		<div id="Content" class="middle">
-			<!-- the content part-->
-			<div class="contain3" id="page_data">
-				<div class="contain2">
-					<div class="contain1" id="indexmain">
-						<div id="left">
-							<!-- 头像部分-->
-							<div class="top" style="float: left;">
+		</div>
+	</header>
+	<div class="tran" style="height: 80px;"></div>
+	<!-- the content element it contains by three parts-->
+	<div id="Content" class="middle">
+		<!-- the content part-->
+		<div class="contain3" id="page_data">
+			<div class="contain2">
+				<div class="contain1" id="indexmain">
+					<div id="left">
+						<!-- 头像部分-->
+						<div class="top" style="float: left;">
 							    <?php if($this->user['avater'] === '暂无'){ ?>
-								  <img src="./image/default.jpg" alt="defaultImage"/>
+								  <img src="./image/default.jpg" alt="defaultImage" />
 								<?php } else { ?>
-								  <img src="main/image?path=<?php echo $this->user['avater']; ?>" alt="defaultImage"/>
+								  <img
+								src="main/image?path=<?php echo $this->user['avater']; ?>"
+								alt="defaultImage" />
 								<?php }?>
 								<div class="nick">
 									<?php echo $this->user['nickname'];?>
 								</div>
-								<div class="clear"></div>
-								<div class="sit">
-									<a href="main/message">编辑资料</a>
-								</div>
-							</div>
 							<div class="clear"></div>
-							<div id="scroll" class="dis">
-								<div class="clear">
-									<a class="toTop" href="#top">Totop</a>
-								</div>
-								<div class="bottom" id="reel">
-									<div class="info">
-										<h2>详细信息:</h2>
-										<h4>学院：<?php echo $this->user['college'];?></h4>
-										<h4>姓名：<?php echo $this->user['name'];?></h3> <h4>职位：<?php echo $this->user['post'];?></h4>
-										<h4>主修专业：<?php echo $this->user['specialty'];?></h4><h4>教学课程：<?php echo $this->user['tutorial'];?></h4>
-										<h4>办公室地址：<?php echo $this->user['office'];?></h4><h4>联系方式：<?php echo $this->user['contact'];?></h4>
-									</div>
+							<div class="sit">
+								<a href="main/message">编辑资料</a>
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div id="scroll" class="dis">
+							<div class="clear">
+								<a class="toTop" href="#top">Totop</a>
+							</div>
+							<div class="bottom" id="reel">
+								<div class="info">
+									<h2>详细信息:</h2>
+									<h4>学院：<?php echo $this->user['college'];?></h4>
+									<h4>姓名：<?php echo $this->user['name'];?></h3>
+										<h4>职位：<?php echo $this->user['post'];?></h4>
+										<h4>主修专业：<?php echo $this->user['specialty'];?></h4>
+										<h4>教学课程：<?php echo $this->user['tutorial'];?></h4>
+										<h4>办公室地址：<?php echo $this->user['office'];?></h4>
+										<h4>联系方式：<?php echo $this->user['contact'];?></h4>
+								
 								</div>
 							</div>
 						</div>
-						<!-- <div class="clear"></div> -->
-						<div id="middle">
+					</div>
+					<!-- <div class="clear"></div> -->
+					<div id="middle">
+						<div id="middle_content" style="display: none;">
 							<h4 id="notice" class="pre">当前位置：学院通知</h4>
 							<nav id="nav_above">
 								<div class="pre">
-									<a href="javascript:;" class="pre_page" style="display: <?php echo $this->display;?>;"> &lt;- Older posts </a>
+									<a href="javascript:;" class="pre_page" style="display: <?php echo $this->display;?>;">
+										&lt;- Older posts </a>
 								</div>
 								<div class="pre">
-									<a href="javascript:;" class="next_page" style="display: none;"> Newer posts -&gt; </a>
+									<a href="javascript:;" class="next_page" style="display: none;">
+										Newer posts -&gt; </a>
 								</div>
 							</nav>
 
-							<?php for($i = 0;$i < count($this->news);$i++) { 
-							           $temp = $this->news[$i];
-							           $article = "article-".$temp['id'].".html";
-							?>
-								<article id="arti" class='articles'>
-									<h2><a href="<?php echo $article; ?>" style="color: #000;text-decoration: none;"><?php echo $temp['title'];?> </a></h2>
-                                    <section style="word-wrap:break-word;"><?php echo $temp['content'];?></section>
+							<?php
+							
+                                for($i = 0; $i < count ( $this->news ); $i ++) {
+								$temp = $this->news [$i];
+								$article = "article-" . $temp ['id'] . ".html";
+								?>
+									<article id="arti" class='articles'>
+									<h2>
+										<a href="<?php echo $article; ?>"
+											style="color: #000; text-decoration: none;"><?php echo $temp['title'];?> </a>
+									</h2>
+									<section style="word-wrap: break-word;"><?php echo $temp['content'];?></section>
 	
 									<div class="pre" style="margin-top: 10px;">
-										<a href="<?php echo $article.'#comment'?>" style="color: hsl(206, 79%, 46%);"> <span>评论(<?php echo $temp['commNum'];?>)</span> </a>
+										<a href="<?php echo $article.'#comment'?>"
+											style="color: hsl(206, 79%, 46%);"> <span>评论(<?php echo $temp['commNum'];?>)</span>
+										</a>
 									</div>
 								</article>
 							<?php } ?>
@@ -115,50 +132,77 @@
 									<a href="javascript:;" class="pre_page"> &lt;- Older posts </a>
 								</div>
 								<div class="pre">
-									<a href="javascript:;" class="next_page" style="display:none;"> Newer posts -&gt; </a>
+									<a href="javascript:;" class="next_page" style="display: none;">
+										Newer posts -&gt; </a>
 								</div>
 							</nav>
 						</div>
-						<div id="right">
-							<!-- 插件列表-->
-							<div id="plugs">
-								<div id="datepicker"></div>
-							</div>
-							<ul>
-							    <li>
-										<h3>友情链接 </h3>
-								</li>
-							    <?php for($i = 0;$i < count($this->links);$i++) { 
-							           $temp = $this->links[$i];
-							    ?>
-								    <li class="pre">
-										<a href="<?php echo $temp['url']; ?>" target="_blank"><span><?php echo $temp['name']; ?></span></a>
-									</li>
+						
+						<!-- 教学部分 -->
+						<div id="teach" class="pre">
+						   <h4 id="notice">当前位置：科研</h4>
+						   <nav id="nav_above">
+						      <div style="font-weight: bold;">科研项目类型</div>
+						      <div style="background-color: hsl(0, 0%, 96%);padding-top: 10px; padding-bottom: 10px;">
+						      
+							      <div style="padding-left: 10px;font-weight: bold;margin-top: 20px;">主持国际·国家级会议</div>
+							      <div class="teach_mar" style="padding-left: 20px;font-weight: bold;">150万元以上</div>
+							      <div class="teach_mar teach_edit" style="padding-left: 20px;">dsfsfssfsd&nbsp;&nbsp;
+							      &nbsp;&nbsp;&nbsp;&nbsp;排名: 1</div>
+							      <div class="teach_mar teach_edit" style="padding-left: 20px;">dsfsfssfsd&nbsp;&nbsp;
+							      &nbsp;&nbsp;&nbsp;&nbsp;排名: 1</div>
+							      <div class="teach_add teach_mar" style="padding-left: 20px;">添加</div>
+						      
+						      </div>
+						      <div style="border-bottom: 2px dashed black; margin-top: 10px;"></div>
+						   </nav>
+						</div>
+						
+						<!-- 科研部分 -->
+						<div id="research"></div>
+						<!-- 技术推广部分 -->
+						<div id="technology"></div>
+						<!-- 数据生成部分 -->
+						<div if="generation"></div>
+					</div>
+					<div id="right">
+						<!-- 插件列表-->
+						<div id="plugs">
+							<div id="datepicker"></div>
+						</div>
+						<ul>
+							<li>
+								<h3>友情链接</h3>
+							</li>
+							    <?php
+											
+                                  for($i = 0; $i < count ( $this->links ); $i ++) {
+												$temp = $this->links [$i];
+												?>
+								    <li class="pre"><a href="<?php echo $temp['url']; ?>"
+								target="_blank"><span><?php echo $temp['name']; ?></span></a></li>
 								<?php } ?>
 							</ul>
-						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<!-- 结尾部分-->
-		<footer style="margin-top: 25px;">
-			<div>
-				SCAU Copyright ©  2011华南农业大学.All rights reserved.
-			</div>
-			<div>
-				地址：广州市天河区五山华南农业大学
-			</div>
-			<div>
-				联系人:林滨     微博：<a href="http://weibo.com/dashilin" target="__blank">http://weibo.com/dashilin</a>
-			</div>
-		</footer>
-	</body>
+	<!-- 结尾部分-->
+	<footer style="margin-top: 25px;">
+		<div>SCAU Copyright © 2011华南农业大学.All rights reserved.</div>
+		<div>地址：广州市天河区五山华南农业大学</div>
+		<div>
+			联系人:林滨 微博：<a href="http://weibo.com/dashilin" target="__blank">http://weibo.com/dashilin</a>
+		</div>
+	</footer>
 
-	<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="./js/jquery-ui.js"></script>
-	<script type="text/javascript" src="./js/modules/init.js"></script>
-	<script type="text/javascript" src="./js/modules/indexMain.js"></script>
-	<script type="text/javascript" src="./js/animate.js"></script>
+</body>
+
+<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="./js/jquery-ui.js"></script>
+<script type="text/javascript" src="./js/modules/init.js"></script>
+<script type="text/javascript" src="./js/modules/indexMain.js"></script>
+<script type="text/javascript" src="./js/animate.js"></script>
 </html>

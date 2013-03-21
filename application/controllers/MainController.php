@@ -5,8 +5,14 @@ require_once 'BaseController.php';
 require_once APPLICATION_PATH . '/models/Links.php';
 require_once APPLICATION_PATH . '/models/News.php';
 require_once APPLICATION_PATH . '/models/Comment.php';
+require_once APPLICATION_PATH . '/models/Navigation.php';
 require_once APPLICATION_PATH . '/utils/FileUploadUtils.php';
-require_once APPLICATION_PATH.'/models/User.php';
+require_once APPLICATION_PATH . '/models/User.php';
+require_once APPLICATION_PATH . '/models/CompetenceRole.php';
+require_once APPLICATION_PATH . '/models/Competence.php';
+require_once APPLICATION_PATH . '/models/Teach_type.php';
+require_once APPLICATION_PATH . '/models/Teach_content.php';
+require_once APPLICATION_PATH . '/models/Teach_subcontent.php';
 
 class MainController extends BaseController {
 	/**
@@ -47,14 +53,35 @@ class MainController extends BaseController {
 		
 		$newpage = $this->fetchNewsByPage ( $page );
 		
+		// To show the navigation 
+		$navs = new Navigation();
+		$navigation = $this->_database->fetchData($navs, $this->db, array(), 'all');
+		$navset = $this->_database->changeToArray($navigation);
+		
 		// To show links
 		$links = new Links ();
 		$linkDate = $this->_database->fetchData ( $links, $this->db, array (), 'all' );
 		$linkset = $this->_database->changeToArray ( $linkDate );
 		
+		// 根据权限显示所有的内容
+		// 定义数组对象
+		$teach_type = null;
+		$teach_content = null;
+		$teach_subcontent = array();
+		$teach_body = array();
+		$competenceids = $this->getUserCompetenceId($this->_user['id']);
+		if(isset($competenceids)) {
+			$teach_type = $this->getTeachTypeById($competenceids);
+		}
+		if(isset($teach_type) && count($teach_type) !== 0){
+			$teach_content = $this->getTeachcontentByType($teach_type, $competenceids);
+		}
+		$this->getSubContentByContent($teach_content, $competenceids);
+		
 		$this->view->assign ( 'user', $this->_user );
 		$this->view->assign ( 'news', $newpage );
 		$this->view->assign ( 'links', $linkset );
+		$this->view->assign ( 'navigation', $navset);
 		
 		// No pre news
 		if ($page * 5 >= $this->_pageNum && $page * 5 < $this->_pageNum + 5) {
@@ -62,6 +89,8 @@ class MainController extends BaseController {
 		} else {
 			$this->view->assign ( "display", "block" );
 		}
+		
+		parent::unsetAll(array($newpage, $navs, $navigation, $navset, $links, $linkDate, $linkset));
 	}
 	
 	/**
@@ -219,6 +248,15 @@ class MainController extends BaseController {
 	     $datas = array('author' => $nickname, 'image' => $image, 'content' => $content,
 	     		 'time' => $time, 'new_id' => $id);
 	     $this->_database->insert($comment, $datas);
+	     
+	     // 更新数据库
+	     $new = new News();
+	     $set = array('commNum' => new Zend_Db_Expr('commNum + 1'));
+	     $where = array('id' => $id);
+	     $this->_database->update($new, $this->db, $set, $where);
+	     
+	     // 消除字段
+	     parent::unsetAll(array($comment, $datas, $new, $set, $where));
 	     $this->_redirect("article-$id.html");
 	}
 	
@@ -277,6 +315,141 @@ class MainController extends BaseController {
 		
 		$newpage = $this->_database->changeToArray ( $rowdata );
 		return $newpage;
+	}
+	
+	/**
+	 * 用于获取特定用户的全部特权
+	 * @param int $userid   用户id
+	 * @return array        用户权限列表
+	 */
+	public function getUserCompetenceId($userid){
+		if(!isset($userid)){
+			die("MainController::getUserCompetence the user id should be exsist!!");
+		}
+		$competence = array();
+		// 获取用户
+		$user = new User();
+		$userbyid = $this->_database->fetchData($user, $this->db, array('id' => $userid));
+		
+		$roles = $this->_database->findManyToManyRow($userbyid, 'Role', 'RoleUser', 'User', 'Role');
+	    
+		while ($roles){
+			$role = $roles->current();
+		    if($role === null){
+		    	break;
+		    }
+			$roles->next();
+			
+			$temp = $this->_database->findManyToManyRow($role, 'Competence', 
+					'CompetenceRole', 'role', 'competence');
+			foreach ($temp as $value){
+				$competence[] = $value['id'];
+			}
+		}
+	    
+		parent::unsetAll(array($user, $userbyid, $roles, $role, $temp));
+		return $competence;
+	}
+	
+	/**
+	 * get teach type by competence id
+	 * @param array $ids The id set
+	 * @return array|null   the teach_type set {0: array(id=***, name=***), ***}
+	 */
+	public function getTeachTypeById($ids){
+		if(!isset($ids) && !is_array($ids)){
+			die("MainController::getTeachTypeById The competence id should be exsist!!");
+		}
+		$teacharr = array();
+		$teach_type = new Teach_type();
+		foreach ($ids as $id){
+			$teachset = $this->_database->fetchData($teach_type, $this->db, 
+					                   array('competence_id' => $id), 'all');
+			$teachcollect = $this->_database->changeToArray($teachset);
+			if(isset($teachcollect)){
+			    $teacharr = array_merge($teacharr, $teachcollect);
+			}
+		}
+		parent::unsetAll(array($teachset, $teachcollect));
+		return $teacharr;
+	}
+	
+	/**
+	 * 根据teachType 和ids 返回对象
+	 * @param array $teachtypes
+	 * @param array $ids
+	 * @return array {0: array(id=***, 'name'=>****, 'haschilden'=>***), ***}
+	 */
+	public function getTeachcontentByType($teachtypes, $ids){
+		if(!isset($teachtypes) || !isset($ids)){
+			die("MainController::getTeachcontentByType The teachtypes and ids must be exsist!!");
+		}
+		$teachcocntent = new Teach_content();
+		$teachcontentarr = array();
+		$teachcontentset = null;
+		$temparr = null;
+		for($i = 0; $i < count($teachtypes); $i++){
+			// 遍历id号
+		    $typeid = $teachtypes[$i]['id'];
+		    foreach ($ids as $id){
+		    	$teachcontentset = $this->_database->fetchData($teachcocntent, $this->db, 
+		    			             array('competence_id' => $id, 'type_id' => $typeid), 'all');
+		        $temparr = $this->_database->changeToArray($teachcontentset);
+		        if(isset($temparr) && count($temparr) !== 0){
+		        	if(!@is_array($teachcontentarr[$i])){
+		        		$teachcontentarr[$i] = array();
+		        	}
+		        	$teachcontentarr[$i] = array_merge($teachcontentarr[$i], $temparr);
+		        }
+		    }
+		}
+		parent::unsetAll(array($teachtypes, $ids, $teachcocntent, $teachcontentset, $temparr));
+		return $teachcontentarr;
+	}
+	
+	/**
+	 * 通过teachContent找到teachSubcontent
+	 * @param array $teachContent
+	 * @param array $ids
+	 */
+	public function getSubContentByContent($teachContent, $ids){
+		if(!isset($teachContent, $ids)){
+			die("MainController::getSubContentByContent  The teacher content and ids must be exsist!!");
+		}
+		$log = new LogUtils('D:/LAMP/apache/logs/output.log');
+		$teachSubContent = array();
+		// 遍历teachcontent
+		for($i = 0, $teachlength = count($teachContent); $i < $teachlength; $i++){
+			$teachTemp = $teachContent[$i];
+			if(isset($teachTemp)){
+				for ($j = 0, $teachsublength = count($teachTemp); $j < $teachsublength; $j++){
+					$teachsubtemp = $teachTemp[$j];
+					// 判断是否有孩子
+					$haschild = $teachsubtemp['haschildren'];
+				    if($haschild === "1"){
+				    	$contentid = $teachsubtemp['id'];
+				    	//$log->printObject($contentid);
+				    	$teachsubcontent = new Teach_subcontent();
+				    	// 找到对应的subcontent
+				    	foreach ($ids as $id){
+				    		$tempsubcontent = $this->_database->fetchData($teachsubcontent, $this->db, array(
+				    				'competence_id' => $id, 'content_id' => $contentid), 'all');
+				    	    $temparr = $this->_database->changeToArray($tempsubcontent);
+				    	    
+				    	    for($k = 0, $temparrlength = count($temparr); $k < $temparrlength; $k++){
+				    	    	$temp = $temparr[$k];
+				    	    	$temp['parent'] = $j;
+				    	    	$temp['root'] = $i;
+				    	        $tempid = $temp['id'];
+				    	        
+				    	        $teachSubContent[] = $temp;
+				    	    }
+				    	}
+				    }
+				}
+			}
+		}
+		return $teachSubContent;
 	}
 }
 ?>

@@ -429,3 +429,20 @@ a.toTop {
 	padding-right: 20px;
 }
 
+.teach_mar {
+	margin-top: 5px;
+}
+
+.teach_edit:after{
+	content: '编辑';
+    display: inline-block;
+    float: right;
+    padding-right: 20px;
+    cursor: pointer;
+    color: #1881D1;
+}
+
+.teach_add {
+	color: #1881D1;
+    cursor: pointer;
+}
