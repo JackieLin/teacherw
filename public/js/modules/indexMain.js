@@ -70,11 +70,45 @@ Core.registerModule('indexmain', function(sb) {
 					   }
 					}
 				});
+			}, 
+			// 根据类型转换div的内容
+			// types array id类型列表
+			toggleType = function(types){
+				if(!types){
+					alert("The types must be exsist and an array!!");
+					return;
+				}
+				var url = location.search, type = url.substring(url.indexOf('type') + 5);
+				if(type){
+					for(var i = 0, t; t = types[i]; i++){
+						if(t === type){
+							document.getElementById(t).style.display = 'block';
+						} else {
+							document.getElementById(t).style.display = 'none';
+						}
+					}
+				}
+			},
+		    parsesting = function(str){
+				if(!str){
+					alert("The str param must be exsist!!");
+				}
+				result = {};
+				// /([^&]*)&nbsp;+排名:([^<]*)/i
+				var name = /([^&]*)&nbsp;+/i, row = /([^<:]*)</i 
+				var projectname = str.match(name), projectrow = str.match(row);
+				if(projectname && projectrow){
+					result['name'] = projectname[1];
+					result['row'] = projectrow[1];
+				}
+				return result;
 			};
 
 			
 			sb.queue({
 				fn : function() {
+					// 在主页中切换页面
+					toggleType(['middle_content', 'teach', 'research', 'technology', 'generation']);
 					scroll = document.getElementById("scroll");
 					plugins = $("#plugs");
 					window.scroll('scroll', ['panel', 'dis']);
@@ -113,7 +147,51 @@ Core.registerModule('indexmain', function(sb) {
 						    };
 						}
 					}
-					// 添加插件
+					// 对teach模块的操作
+				    var teachedit = document.getElementsByClassName('teach_edit'),
+				    content_id = document.getElementById('content_id'), projectname = document.getElementById('projectname'), 
+				    projectrow = document.getElementById('projectrow'), teach_edit = null, teach_div = null,
+				    addupdate = document.getElementById("addupdate"), teachcontent = null, 
+				    save = document.getElementsByClassName('save-type')[0], 
+				    cancel = document.getElementsByClassName('cancel-type')[0], substring = null;
+				    
+				    cancel.onclick = function(){
+				    	addupdate.style.display = "none";
+				    }
+				    save.onclick = function(){
+				       var proname = 'name=' + projectname.value,
+				       prorow = 'condition=' + projectrow.value,
+				       contentid = 'content_id=' + content_id.innerHTML;
+				       substring = proname + "&" + prorow + "&" + contentid;
+				       sb.ajax({
+				    	   'type' : 'POST',
+						   'url' : 'main/updateteach',
+						   'postdata' : substring,
+							'success' : function(data) {
+								
+							}
+				       });	
+				    }
+				    
+				    // 监听点击操作
+				    for(var i = 0, t; t = teachedit[i]; i++){
+				    	var child = t.children;
+				    	teach_edit = child[0];
+				    	teach_div = child[1];
+				    	teachcontent = t.innerHTML;
+				    	
+				    	var obj = parsesting(teachcontent);
+				    	teach_edit.onclick = function(){
+				    	   	addupdate.style.display = 'block';
+				    	   	content_id.innerHTML = teach_div.innerHTML;
+				    	   	if(obj['name']){
+				    	   		projectname.value = obj['name'];
+				    	   		projectrow.value = obj['row'];
+				    	   	}
+				    	}
+				    }
+				    
+				    // 添加插件
 					var child = plugins.children();
 
 					for (var i = 0, t; t = child[i]; i++) {

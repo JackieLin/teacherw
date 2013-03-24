@@ -61,7 +61,10 @@ Core.registerModule("Content", function(sb) {
 									t.onblur = function(event){
 										var value = event.currentTarget.value, name = event.currentTarget.name;
 										if(value === ""){
-											cDiv[name].style.display = check_display;
+											content_id = cDiv[name]['id']
+											if(content_id !== 'content_id'){
+											   cDiv[name].style.display = check_display;
+											}
 										}else{
 											cDiv[name].style.display = "none";
 										}

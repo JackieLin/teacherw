@@ -13,6 +13,7 @@ require_once APPLICATION_PATH . '/models/Competence.php';
 require_once APPLICATION_PATH . '/models/Teach_type.php';
 require_once APPLICATION_PATH . '/models/Teach_content.php';
 require_once APPLICATION_PATH . '/models/Teach_subcontent.php';
+require_once APPLICATION_PATH . '/models/Teach_body.php';
 
 class MainController extends BaseController {
 	/**
@@ -53,6 +54,8 @@ class MainController extends BaseController {
 		
 		$newpage = $this->fetchNewsByPage ( $page );
 		
+		// 取得主页类型
+		$type = $this->_pagerequest->getParam("type");
 		// To show the navigation 
 		$navs = new Navigation();
 		$navigation = $this->_database->fetchData($navs, $this->db, array(), 'all');
@@ -65,18 +68,31 @@ class MainController extends BaseController {
 		
 		// 根据权限显示所有的内容
 		// 定义数组对象
-		$teach_type = null;
-		$teach_content = null;
-		$teach_subcontent = array();
-		$teach_body = array();
-		$competenceids = $this->getUserCompetenceId($this->_user['id']);
-		if(isset($competenceids)) {
-			$teach_type = $this->getTeachTypeById($competenceids);
+		if($type === 'teach'){
+			$teach_type = null;
+			$teach_content = null;
+			$teach_subcontent = null;
+			$teach_body = null;
+			$competenceids = $this->getUserCompetenceId($this->_user['id']);
+			if(isset($competenceids)) {
+				$teach_type = $this->getTeachTypeById($competenceids);
+			}
+			if(isset($teach_type) && count($teach_type) !== 0){
+				$teach_content = $this->getTeachcontentByType($teach_type, $competenceids);
+			}
+			if(isset($teach_content)){
+				$teach_subcontent = $this->getSubContentByContent($teach_content, $competenceids);
+			}
+			if(isset($teach_subcontent)){
+				$teach_body = $this->getTeachBodyById($teach_content, $teach_subcontent, $this->_user['id']);
+			}
+			// 传入到页面中
+			$this->view->assign('teachtype', $teach_type);
+			$this->view->assign('teachcontent', $teach_content);
+			$this->view->assign('teachsubcontent', $teach_subcontent);
+			$this->view->assign('teachbody', $teach_body);
 		}
-		if(isset($teach_type) && count($teach_type) !== 0){
-			$teach_content = $this->getTeachcontentByType($teach_type, $competenceids);
-		}
-		$this->getSubContentByContent($teach_content, $competenceids);
+		
 		
 		$this->view->assign ( 'user', $this->_user );
 		$this->view->assign ( 'news', $newpage );
@@ -411,12 +427,12 @@ class MainController extends BaseController {
 	 * 通过teachContent找到teachSubcontent
 	 * @param array $teachContent
 	 * @param array $ids
+	 * @return array  array(0=>array(id=>...), ...)
 	 */
 	public function getSubContentByContent($teachContent, $ids){
 		if(!isset($teachContent, $ids)){
 			die("MainController::getSubContentByContent  The teacher content and ids must be exsist!!");
 		}
-		$log = new LogUtils('D:/LAMP/apache/logs/output.log');
 		$teachSubContent = array();
 		// 遍历teachcontent
 		for($i = 0, $teachlength = count($teachContent); $i < $teachlength; $i++){
@@ -428,7 +444,6 @@ class MainController extends BaseController {
 					$haschild = $teachsubtemp['haschildren'];
 				    if($haschild === "1"){
 				    	$contentid = $teachsubtemp['id'];
-				    	//$log->printObject($contentid);
 				    	$teachsubcontent = new Teach_subcontent();
 				    	// 找到对应的subcontent
 				    	foreach ($ids as $id){
@@ -440,8 +455,7 @@ class MainController extends BaseController {
 				    	    	$temp = $temparr[$k];
 				    	    	$temp['parent'] = $j;
 				    	    	$temp['root'] = $i;
-				    	        $tempid = $temp['id'];
-				    	        
+				    	        $tempid = $temp['id']; 
 				    	        $teachSubContent[] = $temp;
 				    	    }
 				    	}
@@ -450,6 +464,62 @@ class MainController extends BaseController {
 			}
 		}
 		return $teachSubContent;
+	}
+	
+	/**
+	 * 根据teachcontent, teachsubcontent以及userid过滤出数据
+	 * @param array $teachcontent
+	 * @param array $teachsubcontent
+	 * @param int $userid
+	 * @return array  array(0=>array(id=>***), ...);
+	 */
+	public function getTeachBodyById($teachcontent, $teachsubcontent, $userid){
+		if(!isset($teachcontent, $teachsubcontent, $userid)){
+			die("MainController::getTeachBodyById The teachcontent and subcontent and userid must be exsist!!");
+		}
+		
+		$teachcontentids = array();
+		$teachsubcontentids = array();
+	    $teachbody = array();
+	    $map = array();
+	    $teach_body = new Teach_body();
+	    
+		// 遍历teachcontent
+		for($i = 0, $teachlength = count($teachcontent); $i < $teachlength; $i++){
+			$teachTemp = $teachcontent[$i];
+			if(isset($teachTemp)){
+				for ($j = 0, $teachsublength = count($teachTemp); $j < $teachsublength; $j++){
+					$tempcontent = $teachTemp[$j];
+					$teachcontentids[] = $tempcontent['id'];
+				}
+			}
+		}
+		
+		for($i = 0, $teachlength = count($teachsubcontent); $i < $teachlength; $i++){
+			$teachTemp = $teachsubcontent[$i];
+			$teachsubcontentids[] = $teachTemp['id'];
+		}
+		
+		// 合并数组
+		for($j = 0, $teachsublength = count($teachsubcontentids); $j < $teachsublength; $j++){
+			$teachTemp = $teachsubcontentids[$j];
+			for($i = 0, $teachlength = count($teachcontentids); $i < $teachlength; $i++){
+		        $tempcontent = $teachcontentids[$i];
+		        if($teachTemp === $tempcontent) break;
+			}
+			if($i >= $teachlength) $teachcontentids[] = $teachTemp;
+		}
+		
+		// 从数据库查找数据
+		foreach ($teachcontentids as $value){
+		   $teachTemp = $this->_database->fetchData($teach_body, $this->db, array('content_id' => $value,
+		   		                'user_id' => $userid), 'all');	
+		   $teacharr = $this->_database->changeToArray($teachTemp);
+		   foreach ($teacharr as $value){
+		   	  $teachbody[] = $value;
+		   }
+		}
+		return $teachbody;
 	}
 }
 ?>

@@ -93,7 +93,7 @@ $navs = $this->navigation;
 					</div>
 					<!-- <div class="clear"></div> -->
 					<div id="middle">
-						<div id="middle_content" style="display: none;">
+						<div id="middle_content">
 							<h4 id="notice" class="pre">当前位置：学院通知</h4>
 							<nav id="nav_above">
 								<div class="pre">
@@ -139,31 +139,80 @@ $navs = $this->navigation;
 						</div>
 						
 						<!-- 教学部分 -->
-						<div id="teach" class="pre">
+						<div id="teach" class="pre" style="display: none;">
 						   <h4 id="notice">当前位置：科研</h4>
-						   <nav id="nav_above">
-						      <div style="font-weight: bold;">科研项目类型</div>
-						      <div style="background-color: hsl(0, 0%, 96%);padding-top: 10px; padding-bottom: 10px;">
-						      
-							      <div style="padding-left: 10px;font-weight: bold;margin-top: 20px;">主持国际·国家级会议</div>
-							      <div class="teach_mar" style="padding-left: 20px;font-weight: bold;">150万元以上</div>
-							      <div class="teach_mar teach_edit" style="padding-left: 20px;">dsfsfssfsd&nbsp;&nbsp;
-							      &nbsp;&nbsp;&nbsp;&nbsp;排名: 1</div>
-							      <div class="teach_mar teach_edit" style="padding-left: 20px;">dsfsfssfsd&nbsp;&nbsp;
-							      &nbsp;&nbsp;&nbsp;&nbsp;排名: 1</div>
-							      <div class="teach_add teach_mar" style="padding-left: 20px;">添加</div>
-						      
-						      </div>
-						      <div style="border-bottom: 2px dashed black; margin-top: 10px;"></div>
-						   </nav>
+						   <?php
+						      // 从数据库取出数据 
+						      $teachtype = $this->teachtype;
+						      $teachcontent = $this->teachcontent;
+						      $teachsubcontent = $this->teachsubcontent;
+						      $teachbody = $this->teachbody;
+						      if(isset($teachtype)){
+                                 foreach ($teachtype as $num => $name){
+						    ?>
+							   <nav class="nav_above" style="margin-top: 20px;">
+							      <div style="font-weight: bold;"><?php echo $name['name']; ?></div>
+							      <?php 
+							          $itcontent = isset($teachcontent[$num]) ? $teachcontent[$num] : null;
+							          if($itcontent) { 
+                                      foreach ($itcontent as $contentnum => $contentvalue){
+                                  ?>
+								      <div style="background-color: hsl(0, 0%, 96%);padding-top: 5px; padding-bottom: 10px;">
+								      
+									      <div style="padding-left: 10px;font-weight: bold;margin-top: 10px;"><?php echo $contentvalue['name']; ?></div>
+									      <?php if($contentvalue['haschildren'] === '1') { 
+									            foreach ($teachsubcontent as $subcontentnum => $subcontentvalue) {
+                                                  if ($subcontentvalue['parent'] == $contentnum && $subcontentvalue['root'] == $num){
+									      ?>
+										      <div class="teach_mar" style="padding-left: 20px;font-weight: bold;"><?php echo $subcontentvalue['name']; ?></div>
+										      <?php if(isset($teachbody)) {
+										            foreach ($teachbody as $bodyvalue) {
+                                                      if($bodyvalue['hassubparent'] == 1 && $bodyvalue['content_id'] === $subcontentvalue['id']){
+										      ?>
+											      <div class="teach_mar teach_edit" style="padding-left: 20px;"><?php echo $bodyvalue['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排名:<?php echo $bodyvalue['condition']; ?><a href="javascript:;" class="edit">编辑</a><div style="display: none;"><?php echo $bodyvalue['id'];?></div>
+											      </div>
+											  <?php } ?>
+											  <div class="teach_add teach_mar" style="padding-left: 20px;">添加</div>
+									      <?php } } } } }?>
+								      </div>
+								      <?php }
+                                  } ?>
+							      <div style="border-bottom: 2px dashed black; margin-top: 10px;"></div>
+							   </nav>
+						   <?php 
+						        }
+						      }
+						   ?>
 						</div>
 						
 						<!-- 科研部分 -->
-						<div id="research"></div>
+						<div id="research" style="display: none;"></div>
 						<!-- 技术推广部分 -->
-						<div id="technology"></div>
+						<div id="technology" style="display: none;"></div>
 						<!-- 数据生成部分 -->
-						<div if="generation"></div>
+						<div id="generation" style="display: none;"></div>
+						
+						<div id="addupdate" style="display: none;">
+						   <ul>
+						      <li>
+						         <div>
+						                                项目名称: 
+						         </div>
+						         <input type="text" id="projectname" value="" class="text-size text-style"/>
+						      </li>
+						      <li>
+						         <div>
+						                                     排名: 
+						         </div>
+						         <input type="text" id="projectrow" value="" class="text-size text-style"/>
+						         <div id="content_id" style="display: none;"></div>
+						      </li>
+						      <li>
+						         <input type="button" class="save-type" value="保存" style="height: 40px;margin-top: 30px;"/>
+						         <input type="button" class="cancel-type" value="取消" style="height: 40px;margin-top: 30px;"/>
+						      </li>
+						   </ul>
+						</div>
 					</div>
 					<div id="right">
 						<!-- 插件列表-->

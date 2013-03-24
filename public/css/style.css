@@ -138,7 +138,7 @@ color: hsl(0, 0%, 50%);
     font-size: 20px;
 }
 
-.submit-type, .register-type, .update-type, .save-type{
+.submit-type, .register-type, .update-type, .save-type, .cancel-type{
    height: 40px;
    width: 140px;
    font-size: 25px;
