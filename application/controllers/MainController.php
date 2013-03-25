@@ -275,6 +275,58 @@ class MainController extends BaseController {
 	     parent::unsetAll(array($comment, $datas, $new, $set, $where));
 	     $this->_redirect("article-$id.html");
 	}
+
+	/**
+	 *  根据用户提交的内容修改数据库
+	 */
+	public function updateteachAction(){
+		$name = $this->_pagerequest->getParam("name");
+		$condition = $this->_pagerequest->getParam("condition");
+		$content_id = $this->_pagerequest->getParam("content_id");
+		if(!isset($name, $condition, $content_id)){
+			die("MianController::updateteach The name and condition and content_id must be exsist!!");
+		}
+		 
+		$teach_body = new Teach_body();
+		$num = $this->_database->update($teach_body, $this->db, array('name' => $name, 'condition' => $condition),
+				array('id' => $content_id));
+		if(is_int($num)){
+			echo "更新数据成功";
+		} else{
+			echo "更新数据失败";
+		}
+		 
+		$this->_helper->viewRenderer->setNoRender(true);
+	}
+	
+	/**
+	 * 将teach记录添加到数据库中
+	 */
+	public function addteachAction(){
+		$name = $this->_pagerequest->getParam("name");
+		$condition = $this->_pagerequest->getParam("condition");
+		$content_id = $this->_pagerequest->getParam("content_id");
+		$hassubparent = $this->_pagerequest->getParam("hassubparent");
+		$user_id = $this->_pagerequest->getParam("user_id");
+		if(!isset($name, $condition, $content_id, $hassubparent, $user_id)){
+			die("MainController::addteachAction the params must be exsist!!");
+		}
+		$hassubparent = intval($hassubparent);
+	    $teach_body = new Teach_body();
+		$num = $this->_database->insert($teach_body, array('name' => $name, 'condition' => $condition, 
+				       'year' => '2013', 'hassubparent' => $hassubparent, 'content_id' => $content_id,
+				       'user_id' => $user_id));
+		if(intval($num)){
+			echo '插入数据成功';
+		} else{
+			echo '插入数据失败';
+		}
+		
+		parent::unsetAll(array($teach_body));
+		
+		$this->_helper->viewRenderer->setNoRender(true);
+		return;
+	}
 	
 	/**
 	 * @param string $path               The image path

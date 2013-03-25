@@ -169,11 +169,29 @@ $navs = $this->navigation;
 										            foreach ($teachbody as $bodyvalue) {
                                                       if($bodyvalue['hassubparent'] == 1 && $bodyvalue['content_id'] === $subcontentvalue['id']){
 										      ?>
-											      <div class="teach_mar teach_edit" style="padding-left: 20px;"><?php echo $bodyvalue['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排名:<?php echo $bodyvalue['condition']; ?><a href="javascript:;" class="edit">编辑</a><div style="display: none;"><?php echo $bodyvalue['id'];?></div>
+											      <div class="teach_mar teach_edit" style="padding-left: 20px;"><?php echo $bodyvalue['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排名:<?php echo $bodyvalue['condition']; ?><a href="javascript:;" class="edit">编辑</a>
+											      <div style="display: none;"><?php echo $bodyvalue['id'];?></div>
 											      </div>
-											  <?php } ?>
+											  <?php } } }?>
+											  <div style="display: none;">1</div>
+											  <div style="display: none; "><?php echo $subcontentvalue['id']; ?></div>
+											  <div style="display: none; "><?php echo $this->user['id']; ?></div>
 											  <div class="teach_add teach_mar" style="padding-left: 20px;">添加</div>
-									      <?php } } } } }?>
+											  
+									       <?php } } } else {
+									       	      if(isset($teachbody)) {
+										            foreach ($teachbody as $bodyvalue) {
+                                                      if($bodyvalue['hassubparent'] == 0 && $bodyvalue['content_id'] === $contentvalue['id']){
+                                            ?>
+											      <div class="teach_mar teach_edit" style="padding-left: 20px;"><?php echo $bodyvalue['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排名:<?php echo $bodyvalue['condition']; ?><a href="javascript:;" class="edit">编辑</a>
+											      <div style="display: none;"><?php echo $bodyvalue['id'];?></div>
+											      </div>
+											  <?php } } }?>
+											  <div style="display: none;">0</div>
+											  <div style="display: none; "><?php echo $contentvalue['id']; ?></div>
+											  <div style="display: none; "><?php echo $this->user['id']; ?></div>
+											  <div class="teach_add teach_mar" style="padding-left: 20px;">添加</div>
+									      <?php }?>
 								      </div>
 								      <?php }
                                   } ?>
@@ -205,7 +223,11 @@ $navs = $this->navigation;
 						                                     排名: 
 						         </div>
 						         <input type="text" id="projectrow" value="" class="text-size text-style"/>
+						         <!-- 编辑，添加界面使用 -->
 						         <div id="content_id" style="display: none;"></div>
+						         <!-- 添加界面使用 -->
+						         <div id="hassubchildren" style="display: none; "></div>
+						         <div id="userid" style="display: none;"></div>
 						      </li>
 						      <li>
 						         <input type="button" class="save-type" value="保存" style="height: 40px;margin-top: 30px;"/>

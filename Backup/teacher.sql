@@ -247,7 +247,7 @@ CREATE TABLE `teach_body` (
   PRIMARY KEY (`id`),
   KEY `user_id_idx` (`user_id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,7 +256,7 @@ CREATE TABLE `teach_body` (
 
 LOCK TABLES `teach_body` WRITE;
 /*!40000 ALTER TABLE `teach_body` DISABLE KEYS */;
-INSERT INTO `teach_body` VALUES (1,'国家级励志奖学金',1,'2012',1,1,1);
+INSERT INTO `teach_body` VALUES (1,'校三等奖学金',2,'2012',1,1,1),(2,'林滨',2,'2013',0,2,1),(3,'林滨',1,'2013',0,2,1),(4,'林滨',4,'2013',1,2,1),(6,'凌子恒',2,'2013',0,2,1);
 /*!40000 ALTER TABLE `teach_body` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -396,4 +396,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-24 23:38:31
+-- Dump completed on 2013-03-25 22:10:11

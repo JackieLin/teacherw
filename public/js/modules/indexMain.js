@@ -155,40 +155,81 @@ Core.registerModule('indexmain', function(sb) {
 				    save = document.getElementsByClassName('save-type')[0], 
 				    cancel = document.getElementsByClassName('cancel-type')[0], substring = null;
 				    
+				    // 对teach模块的增加操作
+				    var teachadd = document.getElementsByClassName('teach_add'), hassubchild = document.getElementById('hassubchildren'),
+				    userid = document.getElementById('userid'), add_child = null, add_contentid = null,
+				    add_user = null;
+				    
 				    cancel.onclick = function(){
 				    	addupdate.style.display = "none";
-				    }
-				    save.onclick = function(){
-				       var proname = 'name=' + projectname.value,
-				       prorow = 'condition=' + projectrow.value,
-				       contentid = 'content_id=' + content_id.innerHTML;
-				       substring = proname + "&" + prorow + "&" + contentid;
-				       sb.ajax({
-				    	   'type' : 'POST',
-						   'url' : 'main/updateteach',
-						   'postdata' : substring,
-							'success' : function(data) {
-								
-							}
-				       });	
-				    }
+				    };
 				    
-				    // 监听点击操作
+				    save.onclick = function(){
+				    	var proname = 'name=' + projectname.value,
+					       prorow = 'condition=' + projectrow.value,
+					       contentid = 'content_id=' + content_id.innerHTML,
+					       uservalue = userid.innerHTML,
+					       url = (uservalue) ? 'main/addteach' : 'main/updateteach',
+					       substring = proname + "&" + prorow + "&" + contentid, 
+					       user_id = null, hassubparent = null ;
+				    	
+				        if(uservalue){
+				        	 user_id = "user_id=" + userid.innerHTML;
+				        	 hassubparent = "hassubparent=" + hassubchild.innerHTML;
+				        	 substring += "&" + user_id + "&" + hassubparent;
+				        }
+				       	// 编辑页面
+						sb.ajax({
+						   'type' : 'POST',
+						   'url' : url,
+						   'postdata' : substring,
+						   'success' : function(data) {
+						    	alert(data);
+								if(data === '插入数据成功' || data === '更新数据成功'){
+						    		location.href = "main.html?type=teach";
+							    }
+						   }
+						});
+				    };
+				    
+				    // 监听编辑点击操作
 				    for(var i = 0, t; t = teachedit[i]; i++){
 				    	var child = t.children;
 				    	teach_edit = child[0];
-				    	teach_div = child[1];
-				    	teachcontent = t.innerHTML;
 				    	
-				    	var obj = parsesting(teachcontent);
-				    	teach_edit.onclick = function(){
-				    	   	addupdate.style.display = 'block';
+				    	teach_edit.onclick = function(event){
+				    		var t = event.currentTarget;
+				    		teach_div = t.nextSibling.nextSibling;
 				    	   	content_id.innerHTML = teach_div.innerHTML;
+				    	   	
+				    	   	teachcontent = t.parentNode.innerHTML;
+				    	   	var obj = parsesting(teachcontent);
+				    	   	
 				    	   	if(obj['name']){
 				    	   		projectname.value = obj['name'];
 				    	   		projectrow.value = obj['row'];
 				    	   	}
-				    	}
+				    	   	addupdate.style.display = 'block';
+				    	};
+				    }
+				    
+				    // 编辑添加按钮操作
+				    for(var i = 0, t; t = teachadd[i]; i++){
+				    	
+				    	t.onclick = function(event){
+				    		// 初始化值
+				    		var t = event.currentTarget;
+				    		add_user = t.previousSibling.previousSibling;
+					    	add_contentid = add_user.previousSibling.previousSibling;
+					    	add_child = add_contentid.previousSibling.previousSibling.innerHTML;
+					    	add_user = add_user.innerHTML;
+					    	add_contentid = add_contentid.innerHTML;
+					    	
+				    		addupdate.style.display = 'block';
+				    		hassubchild.innerHTML = add_child;
+				    		userid.innerHTML = add_user;
+				    		content_id.innerHTML = add_contentid;
+				    	};
 				    }
 				    
 				    // 添加插件
