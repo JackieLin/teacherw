@@ -139,6 +139,121 @@ $navs = $this->navigation;
 						</div>
 						
 						<!-- 教学部分 -->
+						<div id="educate" class="pre" style="display: none;">
+						    <h4>当前位置：教学</h4>
+						    <form method="post" action="/main/addorupdateedu">
+						    <nav class="nav_above" style="margin-top: 20px;">
+						       <ul>
+						       <?php 
+						           $educatetype = $this->educatetype;
+						           $educatecontent = $this->educatecontent;
+						           $educatebody = $this->educatebody;
+						           $tempname = null;
+						           $tempid = null;
+						           $length = null;
+						           $body = null;
+						           $tempcontent = null;
+						           if(isset($educatetype)){
+                                       foreach ($educatetype as $type) {
+                                           $tempname = $type['showtype'];
+                                           $tempid = $type['id'];
+                                           if($tempname === 'text') {
+						       ?>
+									          <li>
+									             <img src="./image/pngli.png" />
+									             <div><?php echo $type['name']; ?>     <?php echo $type['comment']; ?>：</div>
+									             <?php if(isset($educatebody)) { 
+									                      for ($i = 0, $length = count($educatebody); $i < $length; $i++) {
+                                                             $body = $educatebody[$i];
+                                                             if($body['hasparent'] === '0' && $body['content_id'] === $tempid) {
+									             ?>
+									             			<input type="text" name="edutext[]" class="text-style" style="margin-top: 0px;" value="<?php echo $body['content']; ?>"/>
+									             			<input type="text" name="textaction[]" style="display: none" value="up_dele <?php echo $tempid; ?>" />
+									             <?php      break; 
+                                                          } } 
+									                        if($i >= $length) { ?>
+									                            <input type="text" name="edutext[]" class="text-style" style="margin-top: 0px;"/>
+									                            <input type="text" name="textaction[]" style="display: none" value="add <?php echo $tempid; ?>" />
+									             <?php
+									                     } } else { 
+                                                 ?>
+                                                           <input type="text" name="edutext[]" class="text-style" style="margin-top: 0px;"/>
+                                                           <input type="text" name="textaction[]" style="display: none" value="add <?php echo $tempid; ?>" />
+                                                 <?php   }?>
+									          </li>
+							   <?php      } else if($tempname === 'select') {?>
+									          <li>
+									             <img src="./image/pngli.png" />
+									             <div><?php echo $type['name']; ?>：</div>
+									             <select name="educatese[]" style="margin-left: 20px;">
+									               <?php foreach ($educatecontent as $content) {
+									                         $tempcontent = $content['content'];
+									                         if($content['type_id'] === $tempid) {
+                                                              if(isset($educatebody)){
+	                                                             for ($i = 0, $length = count($educatebody); $i < $length; $i++) {   
+										                          $body = $educatebody[$i];
+										                           if($body['hasparent'] === '1' && $body['content_id'] === $content['id']) {
+	                                                   ?>
+										                          <option selected="selected"><?php echo $tempcontent; ?></option>
+										               <?php
+										                           break; 
+	                                                            } }
+	                                                              if($i >= $length){
+	                                                   ?>
+	                                                               <option><?php echo $tempcontent; ?></option>
+                                                   <?php 
+                                                            } } else { 
+                                                   ?>
+                                                             <option><?php echo $tempcontent; ?></option> 
+                                                   <?php } } } ?>
+									             </select>
+									          </li>
+						       <?php     } else {?>
+									          <li>
+									             <img src="./image/pngli.png" />
+									             <div><?php echo $type['name']; ?></div>
+									             <?php if(isset($educatecontent)) { 
+									                        foreach ($educatecontent as $content){
+                                                               $tempcontent = $content['content'];
+                                                               if($content['type_id'] === $tempid) {
+                                                               // 判断是否之前有用户填写
+                                                               if(isset($educatebody)){
+                                                                 for($i = 0, $length = count($educatebody); $i < $length; $i++) {
+                                                                    $body = $educatebody[$i];
+                                                                    if($body['hasparent'] === '1' && $body['content_id'] === $content['id']) {
+									             ?>
+															             <div style="float: none;clear: both;">
+															                   <input name="eduelse[]" type="<?php echo $tempname;?>" value="<?php echo $tempcontent; ?>" checked="checked"/>
+															                   <?php echo $tempcontent; ?>
+															             </div>
+									             <?php 
+                                                                    break;
+                                                  } }
+                                                                    if($i >= $length) {
+                                                  ?> 
+                                                                          <div style="float: none;clear: both;">
+															                   <input name="eduelse[]" type="<?php echo $tempname;?>" value="<?php echo $tempcontent; ?>" />
+															                   <?php echo $tempcontent; ?>
+															             </div>   
+                                                  <?php } } else {?>
+                                                                       <div style="float: none;clear: both;">
+															                   <input name="eduelse[]" type="<?php echo $tempname;?>" value="<?php echo $tempcontent; ?>" />
+															                   <?php echo $tempcontent; ?>
+															             </div>
+                                                  <?php } } } }?>
+									          </li>
+						       <?php    } } } ?>
+						                      <li>
+						                         <input style="display: none;" name="user" value="<?php echo $this->user['id']; ?>" />
+						                         <input type="submit" class="edu_save" value="提交"/>
+						                         <input type="reset" class="edu_cancel" value="取消" />
+						                      </li>
+						       </ul>
+						    </nav>
+						     </form>
+						</div>
+						
+						<!-- 科研部分 -->
 						<div id="teach" class="pre" style="display: none;">
 						   <h4 id="notice">当前位置：科研</h4>
 						   <?php
@@ -203,8 +318,6 @@ $navs = $this->navigation;
 						   ?>
 						</div>
 						
-						<!-- 科研部分 -->
-						<div id="research" style="display: none;"></div>
 						<!-- 技术推广部分 -->
 						<div id="technology" style="display: none;"></div>
 						<!-- 数据生成部分 -->

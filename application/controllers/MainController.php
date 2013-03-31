@@ -14,6 +14,12 @@ require_once APPLICATION_PATH . '/models/Teach_type.php';
 require_once APPLICATION_PATH . '/models/Teach_content.php';
 require_once APPLICATION_PATH . '/models/Teach_subcontent.php';
 require_once APPLICATION_PATH . '/models/Teach_body.php';
+require_once APPLICATION_PATH . '/models/Educate_type.php';
+require_once APPLICATION_PATH . '/models/Educate_content.php';
+require_once APPLICATION_PATH . '/models/Educate_body.php';
+require_once APPLICATION_PATH . '/models/Teachno_type.php';
+require_once APPLICATION_PATH . '/models/Teachno_content.php';
+require_once APPLICATION_PATH . '/models/Teachno_body.php';
 
 class MainController extends BaseController {
 	/**
@@ -66,6 +72,27 @@ class MainController extends BaseController {
 		$linkDate = $this->_database->fetchData ( $links, $this->db, array (), 'all' );
 		$linkset = $this->_database->changeToArray ( $linkDate );
 		
+		// 所有模块都需要，先要取得教师权限
+		$competenceids = $this->getUserCompetenceId($this->_user['id']);
+		// 根据权限显示教学数据
+		if($type === 'educate'){
+			$educate_type = null;
+			$educate_content = null;
+			$educate_body = null;
+			if(isset($competenceids)){
+				$result = $this->fetchEducate($competenceids, $this->_user['id']);
+			    // 赋值
+			    $educate_type = count($result['type']) ? $result['type'] : null;
+			    $educate_content = count($result['content']) ? $result['content'] : null;
+			    $educate_body = count($result['body']) ? $result['body'] : null;
+			}
+			// 设置到前端界面
+			$this->view->assign('educatetype', $educate_type);
+			$this->view->assign('educatecontent', $educate_content);
+			$this->view->assign('educatebody', $educate_body);
+			
+		}
+		
 		// 根据权限显示所有的内容
 		// 定义数组对象
 		if($type === 'teach'){
@@ -73,7 +100,7 @@ class MainController extends BaseController {
 			$teach_content = null;
 			$teach_subcontent = null;
 			$teach_body = null;
-			$competenceids = $this->getUserCompetenceId($this->_user['id']);
+			
 			if(isset($competenceids)) {
 				$teach_type = $this->getTeachTypeById($competenceids);
 			}
@@ -275,6 +302,7 @@ class MainController extends BaseController {
 	     parent::unsetAll(array($comment, $datas, $new, $set, $where));
 	     $this->_redirect("article-$id.html");
 	}
+	
 
 	/**
 	 *  根据用户提交的内容修改数据库
@@ -326,6 +354,209 @@ class MainController extends BaseController {
 		
 		$this->_helper->viewRenderer->setNoRender(true);
 		return;
+	}
+	
+	/**
+	 * 添加或修改educate 的action
+	 */
+	public function addorupdateeduAction(){
+		// get data
+		$userid = $this->_pagerequest->getParam("user");
+		$edutext = $this->_pagerequest->getParam('edutext');
+		$textaction = $this->_pagerequest->getParam('textaction');
+		$educatese = $this->_pagerequest->getParam("educatese");
+		$eduelse = $this->_pagerequest->getParam("eduelse");
+		$userid = intval($userid);
+		$alldata = null;
+		$result = null;
+		$educatetype = null;
+		$educatecontent = null;
+		$educatebody = null;
+		$educatebodyobj = new Educate_body();
+		// 标志变量
+		$tempids = array();
+		$tempflags = array();
+		$tempedu = null;
+		$length = null;
+		$row = null;
+		$tempcontent = null;
+		$tempbody = null;
+		// unchangable
+		$selectlength = 0;
+		$tmp = null;
+		
+		// To split the textaction
+		if(is_array($textaction)){
+			foreach ($textaction as $text){
+				$tempflags[] = strtok($text, " ");
+				$tempids[] = strtok(" ");
+			}
+			
+			// change the array to ids
+			for($i = 0, $length = count($edutext); $i < $length; $i++){
+				$tempedu[$tempids[$i]] = array('text' => $edutext[$i], 'action' => $tempflags[$i]);
+			}
+			
+			$edutext = $tempedu;
+		}
+	    // 数据库取出所有数据
+	    $compeids = $this->getUserCompetenceId($userid);
+	    if(isset($compeids)){
+	    	$result = $this->fetchEducate($compeids, $userid);
+	    }
+	    $educatetype = $result['type'];
+	    $educatecontent = $result['content'];
+	    $educatebody = (count($result['body'])) ? $result['body'] : null;
+	    // 处理edutext
+		foreach ($educatetype as $type){
+		     $temptypeshow = $type['showtype'];
+		     $temptypeid = $type['id'];
+		     if($temptypeshow === 'text'){
+		     	$tempedu = $edutext[$temptypeid];
+		     	
+		     	if(isset($tempedu)){
+		     		// follow the action to manager db
+		     		if($tempedu['action'] === 'add' && $tempedu['text'] !== ""){
+		     			// add data to database
+		     			$row = $this->_database->insert($educatebodyobj, array('content' => $tempedu['text'], 'user_id' => $userid, 
+		     					'content_id' => $temptypeid, 'hasparent' => 0));
+		     			if(!isset($row)){
+		     				die("Add text is error, please try again");
+		     			}
+		     			
+		     		} else if($tempedu['action'] === 'up_dele'){
+		     			$tempbody = $this->getDataByCondition($educatebody, array('content_id' => $temptypeid, 'user_id' => $userid, 'hasparent' => '0'));
+		     		    // delete
+		     		    if ($tempedu['text'] === "" && count($tempbody)){
+		     		    	$row = $this->_database->delete($educatebodyobj, $this->db, array('id' => $tempbody[0]['id']));
+		     		    	if(!isset($row)){
+		     		    		die("delete text is error, please try again");
+		     		    	}
+		     		    }
+		     		   // update
+		     		   if ($tempedu['text'] !== "" && count($tempbody)) {
+		     		   	   $row = $this->_database->update($educatebodyobj, $this->db, array('content' => $tempedu['text']), 
+		     		   	   		array('id' => $tempbody[0]['id'], 'user_id' => $userid, 'hasparent' => 0));
+		     		   	   if(!isset($row)){
+		     		   	   	   die("update text is error, please try again");
+		     		   	   }
+		     		   }
+		     		}
+		     	}
+		     } else if ($temptypeshow === 'select') {
+		     	   $tempcontent = $this->getDataByCondition($educatecontent, array('type_id' => $temptypeid));
+		     	   foreach ($tempcontent as $key => $value) {
+			     	   	$tmp = null;
+			     	   	$bodyid = $value['id'];
+			     	   	$tempbody = $this->getDataByCondition($educatebody, array('content_id' => $value['id'], 'user_id' => $userid, 
+			     	   			'hasparent' => '1'));
+			     	   	foreach ($educatese as $else) {
+			     	   		if ($else === $value['content']){
+			     	   			$tmp = $else;
+			     	   			break;
+			     	   		}
+			     	   	}
+			     	   	
+			     	   	// add
+			     	   	if (isset($tmp) && !count($tempbody)) {
+			     	   		// insert
+			     	   		$row = $this->_database->insert($educatebodyobj, array('content' => $tmp, 'user_id' => $userid,
+			     	   				'content_id' => $value['id'], 'hasparent' => 1));
+			     	   		if(!isset($row)){
+			     	   			die("Add select is error, please try again");
+			     	   		}
+			     	   	}
+			     	   	// update
+			     	   	if (isset($tmp) && count($tempbody)) {
+			     	   		$row = $this->_database->update($educatebodyobj, $this->db, array('content' => $tmp),
+			     	   				array('user_id' => $userid, 'content_id' => $bodyid, 'hasparent' => 1));
+			     	   		if(!isset($row)){
+			     	   			die("update select is error, please try again");
+			     	   		}
+			     	   	}
+			     	   	// delete
+			     	   	if (!isset($tmp) && count($tempbody)) {
+			     	   		$row = $this->_database->delete($educatebodyobj, $this->db, array('id' => $tempbody[0]['id']));
+			     	   		if(!isset($row)){
+			     	   			die("delete select is error, please try again");
+			     	   		}
+			     	   	}
+		     	   }
+		     } else {
+		     	  $tempcontent = $this->getDataByCondition($educatecontent, array('type_id' => $temptypeid));
+// 		     	  $tempbody = $this->getDataByCondition($educatebody, array());
+                  foreach ($tempcontent as $key => $value) {
+                  	   $tmp = null;
+                  	   $bodyid = $value['id'];
+                  	   $tempbody = $this->getDataByCondition($educatebody, array('content_id' => $bodyid, 'user_id' => $userid,
+                  	   		'hasparent' => "1"));
+                  	   foreach ($eduelse as $else) {
+                  	   	   if ($else === $value['content']){
+                  	   	   	    $tmp = $else;
+                  	   	   	    break;
+                  	   	   }
+                  	   }
+                  	   
+                  	   // add
+                  	   if (isset($tmp) && !count($tempbody)) {
+                  	   	   $row = $this->_database->insert($educatebodyobj, array('content' => $tmp, 'content_id' => $bodyid, 
+                  	   	   		'user_id' => $userid, 'hasparent' => 1));
+                  	   	   if(!isset($row)){
+                  	   	   	die("Add else is error, please try again");
+                  	   	   }
+                  	   }
+                  	   // update
+                  	   if (isset($tmp) && count($tempbody)) {
+                  	   	   	 $row = $this->_database->update($educatebodyobj, $this->db, array('content' => $tmp),
+                  	   	   			array('user_id' => $userid, 'content_id' => $bodyid, 'hasparent' => 1));
+                  	   	   	 if(!isset($row)){
+                  	   	   	 	die("update else is error, please try again");
+                  	   	   	 }
+                  	   }
+                  	   // delete
+                  	   if (!isset($tmp) && count($tempbody)) {
+                  	   	   	 $row = $this->_database->delete($educatebodyobj, $this->db, array('id' => $tempbody[0]['id']));
+                  	   	   	 if(!isset($row)){
+                  	   	   	 	die("delete else is error, please try again");
+                  	   	   	 }
+                  	   }
+                  }
+		     }
+		}
+	    $this->redirect('main.html?type=educate');
+	}
+	
+	/**
+	 * get obj data meet the condition
+	 * @param array(0 => array(), ...) $obj
+	 * @param array $condition  {'****' => '****', ....}
+	 * @return array $result The result that meet the condition
+	 */
+	public function getDataByCondition($obj, $condition){
+		if(!isset($condition)){
+			die('MainController::getDataByCondition The condition must be exsist!!');
+		}
+		$result = array();
+		if(!isset($obj))
+			return $result;
+		
+		$flag = false;
+		$temp = null;
+		
+		foreach ($obj as $objvalue){
+		     foreach ($condition as $key => $value){
+		     	 if ($objvalue[$key] != $value) {
+		     	 	$flag = true;
+		     	 	break;
+		     	 }
+		     }
+		     if (!$flag){
+		     	$result[] = $objvalue;
+		     	continue;
+		     }
+		     $flag = false;
+		}
+		return $result;
 	}
 	
 	/**
@@ -417,6 +648,138 @@ class MainController extends BaseController {
 	    
 		parent::unsetAll(array($user, $userbyid, $roles, $role, $temp));
 		return $competence;
+	}
+	
+	/**
+	 * 取出所有educate type以及educate content表的所有数据
+	 * @param array $ids  the user competence
+	 * @param int $userid
+	 * @return array 
+	 * {
+	 *    type : {0: array(id=>...), ...}
+	 *    content : {0 : array(id=>...), ...}
+	 * }
+	 */
+	public function fetchEducate($ids, $userid){
+		if(!isset($ids, $userid)){
+			die("MainController::fetchEducate  The competence id and user id must be exsist!!");
+		}
+		
+		$result = array();
+		// 定義educate type
+        $educatetype = array();
+        // 定義educate content
+        $educatecontent = array();
+        // 定义educate body
+        $educatebody = array();
+        
+        $educateset = null;
+		$edutypeobj = new Educate_type();
+		$edubodyobj = new Educate_body();
+		$lenght = null;
+		$sublenght = null;
+		$tempeducate = null;
+		$subrow = null;
+		$tempcontent = array();
+		
+		foreach ($ids as $id){
+			$educateset = $this->_database->fetchData($edutypeobj, $this->db, array('competence_id' => $id), 'all');
+			if($educateset === null) continue;
+			// 得到最终结果
+			for($i = 0, $lenght = $educateset->count(); $i < $lenght; $i++){
+				$tempeducate = $educateset[$i];
+				// 轉換對象為數組
+				foreach ($tempeducate as $key => $value){
+					$educatetype[$i][$key] = $value;
+				}
+				
+				if($tempeducate['showtype'] !== 'text'){
+					// 取出值
+					$subrow = $this->_database->findDependentRow($tempeducate, 'Educate_content', 'educatetype');
+					
+					// 取出值并填在content数组中
+					for($j = 0, $sublenght = $subrow->count(); $j < $sublenght; $j++){
+						$tempeducate = $subrow[$j];
+						foreach ($tempeducate as $key => $value){
+							$tempcontent[$key] = $value;
+						}
+						$educatecontent[] = $tempcontent;
+					}
+				}
+			}
+		}
+		
+		// 取出所有的educate body
+		$educateset = $this->_database->fetchData($edubodyobj, $this->db, array('user_id' => $userid), 'all');
+		$educatebody = $this->_database->changeToArray($educateset);
+		
+	    $result['type'] = $educatetype;
+	    $result['content'] = $educatecontent;
+	    $result['body'] = $educatebody;
+	    
+	    parent::unsetAll(array($educateset, $edutypeobj, $edubodyobj, $lenght, $tempcontent, $tempeducate, $subrow));
+	    return $result;
+	}
+	
+	/**
+	 *  get teachno message by cmpetence id and user id
+	 *  @param array $ids 用户权限的id
+	 *  @param string $userid 用户id
+	 */
+	public function fetchTeachno($ids, $userid){
+	    if(isset($ids, $userid)){
+	    	die("MainController::fetchTeachno The competence ids and user id must be exsist!!");
+	    }
+	    $result = array();
+	    $teachnotypearr = array();
+	    $teachnocontentarr = array();
+	    $teachnobodyarr = array();
+	    
+	    $teachnoset = null;
+	    $length = null;
+	    $sublength = null;
+	    $tempteachno = null;
+	    $tempteachnocon = null;
+	    $teachbodyset = null;
+	    $subrow = null;
+	    $teachnotype = new Teachno_type();
+	    $teachnobody = new Teachno_body();
+	    
+	    foreach ($ids as $id){
+	    	$teachnoset = $this->_database->fetchData($teachnotype, $this->db, array('competence_id' => $id), 'all');
+	        if(isset($teachnoset)){
+	        	for($i = 0, $length = $teachnoset->count(); $i < $length; $i++){
+	        		// 对于每一个teachno,获取teachno_content
+	        		$tempteachno = $teachnoset[$i];
+	        		// 转换对象为数组
+	        		foreach ($tempteachno as $key => $value){
+	        			$teachnotypearr[$i][$key] = $value;
+	        		}
+	        		
+	        		$subrow = $this->_database->findDependentRow($tempteachno, 'Teachno_content', 'type');
+	        		if(isset($subrow)){
+		        	    for($j = 0, $sublength = $subrow->count(); $j < $sublength; $j++){
+		        	    	$tempteachno = $subrow[$j];
+		        	    	foreach ($tempteachno as $key => $value){
+		        	    		$tempteachnocon[$key] = $value;
+		        	    	}
+		        	    	$teachnocontent[] = $tempteachnocon;
+		        	    }
+	        		}
+	        	}
+	        }
+	    }
+
+	    // 取出所有的teachno body
+	    $teachnobody = $this->_database->fetchData($teachnobody, $this->db, array('user_id' => $userid), 'all');
+	    $teachnobodyarr = $this->_database->changeToArray($teachnobody);
+	    
+	    $result['type'] = $teachnotypearr;
+	    $result['content'] = $teachnocontentarr;
+	    $result['body'] = $teachnobodyarr;
+	    
+	    parent::unsetAll(array($teachbodyset, $teachnoset, $tempteachno, $tempteachnocon, $subrow, $teachnotype, $teachnobody));
+	    return $result;
 	}
 	
 	/**

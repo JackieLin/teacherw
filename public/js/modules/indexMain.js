@@ -108,7 +108,7 @@ Core.registerModule('indexmain', function(sb) {
 			sb.queue({
 				fn : function() {
 					// 在主页中切换页面
-					toggleType(['middle_content', 'teach', 'research', 'technology', 'generation']);
+					toggleType(['middle_content', 'teach', 'educate', 'technology', 'generation']);
 					scroll = document.getElementById("scroll");
 					plugins = $("#plugs");
 					window.scroll('scroll', ['panel', 'dis']);

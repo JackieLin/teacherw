@@ -5,6 +5,6 @@
    	    */
    	   protected $_name = 'competence';
    	   protected $_dependentTables = array('CompetenceRole', 'Teach_type', 'Teach_content', 
-   	   		'Teach_subcontent');
+   	   		'Teach_subcontent', 'Educate_type', 'Teachno_type');
    }
 ?>

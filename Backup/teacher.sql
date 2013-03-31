@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.29, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.6.10, for Win32 (x86)
 --
 -- Host: localhost    Database: teacher
 -- ------------------------------------------------------
--- Server version	5.5.29
+-- Server version	5.6.10
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -99,6 +99,91 @@ INSERT INTO `competence_role` VALUES (1,1,1),(2,2,2);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `educate_body`
+--
+
+DROP TABLE IF EXISTS `educate_body`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `educate_body` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(100) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `content_id` int(11) DEFAULT NULL,
+  `hasparent` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `content_id` (`content_id`),
+  CONSTRAINT `educate_body_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `educate_body`
+--
+
+LOCK TABLES `educate_body` WRITE;
+/*!40000 ALTER TABLE `educate_body` DISABLE KEYS */;
+/*!40000 ALTER TABLE `educate_body` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `educate_content`
+--
+
+DROP TABLE IF EXISTS `educate_content`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `educate_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(100) DEFAULT NULL,
+  `type_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type_id` (`type_id`),
+  CONSTRAINT `educate_content_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `educate_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `educate_content`
+--
+
+LOCK TABLES `educate_content` WRITE;
+/*!40000 ALTER TABLE `educate_content` DISABLE KEYS */;
+INSERT INTO `educate_content` VALUES (1,'教学成果良好,有突出事迹,或受到校级以上表彰',3),(2,'教学负责,学生和老师普遍反映满意',3),(3,'没有出现教学事故,教学任务按计划完成',3),(4,'出现教学时故,或未按计划完成教学任务',3),(5,'本专业学术专著,全国统编教材的主编,副主编',4),(6,'参编全国教材,(副)主编省级教材',4),(7,'(副)主编消极教材,参编省级教材,科普书籍',4),(8,'参编消极教材,cai制作',4),(9,'新建实验室',5),(10,'实验室改造、搬迁计划或重要设备安装',5),(11,'负责常规管理和维护',5),(12,'当年新建基地的负责人',6),(13,'基地的日常管理己指导工作及参与新建基地的主要人员',6);
+/*!40000 ALTER TABLE `educate_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `educate_type`
+--
+
+DROP TABLE IF EXISTS `educate_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `educate_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `showtype` varchar(20) DEFAULT NULL,
+  `comment` varchar(20) DEFAULT NULL,
+  `competence_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `competence_id` (`competence_id`),
+  CONSTRAINT `educate_type_ibfk_1` FOREIGN KEY (`competence_id`) REFERENCES `competence` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `educate_type`
+--
+
+LOCK TABLES `educate_type` WRITE;
+/*!40000 ALTER TABLE `educate_type` DISABLE KEYS */;
+INSERT INTO `educate_type` VALUES (1,'指导本专科生学习','text','人数',2),(2,'指导本专科毕业论文','text','数量',2),(3,'教学质量','checkbox','',2),(4,'教学建设','checkbox','',2),(5,'实验室建设','select','',2),(6,'基地建设','checkbox','',2);
+/*!40000 ALTER TABLE `educate_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `links`
 --
 
@@ -144,7 +229,7 @@ CREATE TABLE `navigation` (
 
 LOCK TABLES `navigation` WRITE;
 /*!40000 ALTER TABLE `navigation` DISABLE KEYS */;
-INSERT INTO `navigation` VALUES (1,'教学','http://teacherw.sinaapp.com/main.html?type=teach'),(2,'科研','http://teacherw.sinaapp.com/main.html?type=research'),(3,'技术推广','http://teacherw.sinaapp.com/main.html?type=technology'),(4,'数据生成','http://teacherw.sinaapp.com/main.html?type=generation');
+INSERT INTO `navigation` VALUES (1,'教学','http://teacherw.sinaapp.com/main.html?type=educate'),(2,'科研','http://teacherw.sinaapp.com/main.html?type=teach'),(3,'技术推广','http://teacherw.sinaapp.com/main.html?type=technology'),(4,'数据生成','http://teacherw.sinaapp.com/main.html?type=generation');
 /*!40000 ALTER TABLE `navigation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +341,7 @@ CREATE TABLE `teach_body` (
 
 LOCK TABLES `teach_body` WRITE;
 /*!40000 ALTER TABLE `teach_body` DISABLE KEYS */;
-INSERT INTO `teach_body` VALUES (1,'校三等奖学金',2,'2012',1,1,1),(2,'林滨',2,'2013',0,2,1),(3,'林滨',1,'2013',0,2,1),(4,'林滨',4,'2013',1,2,1),(6,'凌子恒',2,'2013',0,2,1);
+INSERT INTO `teach_body` VALUES (1,'校三等奖学金12',2,'2012',1,1,1),(2,'林滨',2,'2013',0,2,1),(3,'林滨',1,'2013',0,2,1),(4,'林滨',4,'2013',1,2,1),(6,'凌子恒',2,'2013',0,2,1);
 /*!40000 ALTER TABLE `teach_body` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -349,6 +434,89 @@ INSERT INTO `teach_type` VALUES (1,'科研项目类型',2),(2,'科研论文类�
 UNLOCK TABLES;
 
 --
+-- Table structure for table `teachno_body`
+--
+
+DROP TABLE IF EXISTS `teachno_body`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `teachno_body` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `condition` int(11) DEFAULT NULL,
+  `year` varchar(10) DEFAULT NULL,
+  `content_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `content_id_idx` (`content_id`),
+  KEY `user_id_idx` (`user_id`),
+  CONSTRAINT `f_content_id` FOREIGN KEY (`content_id`) REFERENCES `teachno_content` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `f_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teachno_body`
+--
+
+LOCK TABLES `teachno_body` WRITE;
+/*!40000 ALTER TABLE `teachno_body` DISABLE KEYS */;
+/*!40000 ALTER TABLE `teachno_body` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teachno_content`
+--
+
+DROP TABLE IF EXISTS `teachno_content`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `teachno_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `type_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type_id` (`type_id`),
+  CONSTRAINT `teachno_content_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `teachno_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teachno_content`
+--
+
+LOCK TABLES `teachno_content` WRITE;
+/*!40000 ALTER TABLE `teachno_content` DISABLE KEYS */;
+/*!40000 ALTER TABLE `teachno_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teachno_type`
+--
+
+DROP TABLE IF EXISTS `teachno_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `teachno_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `competence_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `competence_id` (`competence_id`),
+  CONSTRAINT `teachno_type_ibfk_1` FOREIGN KEY (`competence_id`) REFERENCES `competence` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teachno_type`
+--
+
+LOCK TABLES `teachno_type` WRITE;
+/*!40000 ALTER TABLE `teachno_type` DISABLE KEYS */;
+/*!40000 ALTER TABLE `teachno_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -396,4 +564,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-25 22:10:11
+-- Dump completed on 2013-03-28 17:07:36

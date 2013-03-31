@@ -73,6 +73,31 @@
    	   }
    	   
    	   /**
+   	    * delete the data
+   	    * @param object $table
+   	    * @param resource $db the database
+   	    * @param array $where the where condition default '' {id="...", ....}
+   	    * @return
+   	    */
+   	   public function delete($table, $db, $where=null){
+	   	   	if (!isset($table, $db)){
+	   	   		die("DataBaseUtils::delete  The table and database must be exsist!!");
+	   	   	}
+	   	   	$dwhere = null;
+	   	   	if(isset($where)){
+	   	   		foreach ($where as $key => $value){
+	   	   			if(!isset($dwhere)){
+	   	   				$dwhere = $db->quoteInto("$key = ?", $value);
+	   	   			}else{
+	   	   				$dwhere .= $db->quoteInto(" AND $key = ?", $value);
+	   	   			}
+	   	   		}
+	   	   	}
+	   	   	
+	   	   	return $table->delete($dwhere);
+   	   }
+   	   
+   	   /**
    	    * 插入数据
    	    * @param object $table          The table object
    	    * @param resource $db           The database adapter   

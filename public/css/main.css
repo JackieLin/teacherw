@@ -472,10 +472,21 @@ a.toTop {
 	-moz-border-radius: 10px;
 }
 
-#addupdate > ul{
+#addupdate > ul, #educate ul, #educate img, #educate div {
 	float: left;
 }
 
+#educate li{
+   overflow: auto;
+   margin-top: 20px;
+}
+
+#educate li input[type="checkbox"]{
+   overflow: auto;
+   margin-top: 10px;
+   margin-left: 30px;
+}
+ 
 #addupdate  div{
 	float: left;
     width: 100px;
