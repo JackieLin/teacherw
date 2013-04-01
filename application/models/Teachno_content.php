@@ -6,6 +6,7 @@
    class Teachno_content extends Zend_Db_Table_Abstract {
    	   protected $_name = 'teachno_content';
    	   
+   	   protected $_dependentTables = array('Teachno_body');
    	   protected $_referenceMap = array(
    	      
    	   		'type' => array(

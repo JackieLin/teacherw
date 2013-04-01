@@ -93,7 +93,7 @@ $navs = $this->navigation;
 					</div>
 					<!-- <div class="clear"></div> -->
 					<div id="middle">
-						<div id="middle_content">
+						<div id="middle_content" style="display: none;">
 							<h4 id="notice" class="pre">当前位置：学院通知</h4>
 							<nav id="nav_above">
 								<div class="pre">
@@ -319,7 +319,42 @@ $navs = $this->navigation;
 						</div>
 						
 						<!-- 技术推广部分 -->
-						<div id="technology" style="display: none;"></div>
+						<div id="teachnology" style="display: none;" class="pre" >
+						    <h4 id="notice">当前位置：技术推广</h4>
+						    <?php 
+						       $teachnotype = $this->teachnotype;
+						       $teachnocontent = $this->teachnocontent;
+						       $teachnobody = $this->teachnobody;
+						       if (isset($teachnotype)) {
+                                   foreach ($teachnotype as $num => $name){
+						    ?>
+						    <nav class="nav_above" style="margin-top: 20px;">
+							      <div style="font-weight: bold;"><?php echo $name['name']; ?></div>
+							<?php 
+							       if (isset($teachnocontent)) {
+                                      foreach ($teachnocontent as $contentid => $contentname) {
+                                         if ($contentname['type_id'] == $name['id']) {
+							?>
+							      <div style="background-color: hsl(0, 0%, 96%);padding-top: 5px; padding-bottom: 10px;">
+								       <div style="padding-left: 10px;font-weight: bold;margin-top: 10px;"><?php echo $contentname['name']; ?></div>
+						    <?php 
+						             if (isset($teachnobody)) {
+                                        foreach ($teachnobody as $bodyid => $bodyname) {
+                                            if ($bodyname['content_id'] == $contentname['id']) {
+						   ?>
+						     <div class="teachno_mar teach_edit" style="padding-left: 20px;"><?php echo $bodyname['name']; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;排名:<?php echo $bodyname['condition']; ?><a href="javascript:;" class="edit">编辑</a>      
+						     <div style="display: none; "><?php echo $bodyname['id']; ?></div>
+						     </div>
+						   <?php } } } ?>
+						        <div style="display: none; "><?php echo $contentname['id']; ?></div>
+						        <div style="display: none; "><?php echo $this->user['id']; ?></div>
+						        <div class="teach_add teachno_mar" style="padding-left: 20px;">添加</div>
+						      </div>
+						   <?php } } } ?>
+						      </nav>
+						   <?php } }?>
+						</div>
+						
 						<!-- 数据生成部分 -->
 						<div id="generation" style="display: none;"></div>
 						

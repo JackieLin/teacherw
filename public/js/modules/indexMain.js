@@ -87,6 +87,12 @@ Core.registerModule('indexmain', function(sb) {
 							document.getElementById(t).style.display = 'none';
 						}
 					}
+				} else {
+					// main.html 时显示
+					for (var i = 0, t; t = types[i]; i++) {
+						(t === 'middle_content') ? (document.getElementById(t).style.display = 'block') 
+								: (document.getElementById(t).style.display = 'none');
+					}
 				}
 			},
 		    parsesting = function(str){
@@ -108,7 +114,7 @@ Core.registerModule('indexmain', function(sb) {
 			sb.queue({
 				fn : function() {
 					// 在主页中切换页面
-					toggleType(['middle_content', 'teach', 'educate', 'technology', 'generation']);
+					toggleType(['middle_content', 'teach', 'educate', 'teachnology', 'generation']);
 					scroll = document.getElementById("scroll");
 					plugins = $("#plugs");
 					window.scroll('scroll', ['panel', 'dis']);
@@ -155,10 +161,11 @@ Core.registerModule('indexmain', function(sb) {
 				    save = document.getElementsByClassName('save-type')[0], 
 				    cancel = document.getElementsByClassName('cancel-type')[0], substring = null;
 				    
-				    // 对teach模块的增加操作
+				    // 对teach以及teachno模块的增加操作
 				    var teachadd = document.getElementsByClassName('teach_add'), hassubchild = document.getElementById('hassubchildren'),
 				    userid = document.getElementById('userid'), add_child = null, add_contentid = null,
-				    add_user = null;
+				    add_user = null, teachdis = document.getElementById('teach').style.display, 
+				    teachnodis = document.getElementById('teachnology').style.display;
 				    
 				    cancel.onclick = function(){
 				    	addupdate.style.display = "none";
@@ -169,14 +176,23 @@ Core.registerModule('indexmain', function(sb) {
 					       prorow = 'condition=' + projectrow.value,
 					       contentid = 'content_id=' + content_id.innerHTML,
 					       uservalue = userid.innerHTML,
-					       url = (uservalue) ? 'main/addteach' : 'main/updateteach',
+					       url = null,
 					       substring = proname + "&" + prorow + "&" + contentid, 
 					       user_id = null, hassubparent = null ;
 				    	
+				    	(teachdis === 'none') ? 
+						         (url = (uservalue) ? 'main/addteachno' : 'main/updateteachno') : 
+						         (url = (uservalue) ? 'main/addteach' : 'main/updateteach');
+						
 				        if(uservalue){
 				        	 user_id = "user_id=" + userid.innerHTML;
-				        	 hassubparent = "hassubparent=" + hassubchild.innerHTML;
-				        	 substring += "&" + user_id + "&" + hassubparent;
+				        	 
+				        	 (teachdis === 'none') ? 
+				        	   "" : (hassubparent = "hassubparent=" + hassubchild.innerHTML);
+				        	 
+				        	 (teachdis === 'none') ? 
+				        	  (substring += "&" + user_id): (substring += "&" + user_id + "&" + hassubparent);
+				        	  alert(url);
 				        }
 				       	// 编辑页面
 						sb.ajax({
@@ -186,7 +202,8 @@ Core.registerModule('indexmain', function(sb) {
 						   'success' : function(data) {
 						    	alert(data);
 								if(data === '插入数据成功' || data === '更新数据成功'){
-						    		location.href = "main.html?type=teach";
+									(teachdis === 'none') ? 
+						    	 	 (location.href = "main.html?type=teachnology"): (location.href = "main.html?type=teach");
 							    }
 						   }
 						});
@@ -208,6 +225,8 @@ Core.registerModule('indexmain', function(sb) {
 				    	   	if(obj['name']){
 				    	   		projectname.value = obj['name'];
 				    	   		projectrow.value = obj['row'];
+				    	   		// 清空userid的内容
+				    	   		userid.innerHTML = "";
 				    	   	}
 				    	   	addupdate.style.display = 'block';
 				    	};
@@ -215,18 +234,20 @@ Core.registerModule('indexmain', function(sb) {
 				    
 				    // 编辑添加按钮操作
 				    for(var i = 0, t; t = teachadd[i]; i++){
-				    	
 				    	t.onclick = function(event){
 				    		// 初始化值
 				    		var t = event.currentTarget;
 				    		add_user = t.previousSibling.previousSibling;
 					    	add_contentid = add_user.previousSibling.previousSibling;
-					    	add_child = add_contentid.previousSibling.previousSibling.innerHTML;
+					    	
+					    	(teachdis == 'none') ? 
+					    	  '' : (add_child = add_contentid.previousSibling.previousSibling.innerHTML);
+					    	
 					    	add_user = add_user.innerHTML;
 					    	add_contentid = add_contentid.innerHTML;
 					    	
 				    		addupdate.style.display = 'block';
-				    		hassubchild.innerHTML = add_child;
+				    		(teachdis == 'none') ? '' : (hassubchild.innerHTML = add_child);
 				    		userid.innerHTML = add_user;
 				    		content_id.innerHTML = add_contentid;
 				    	};

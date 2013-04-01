@@ -120,6 +120,23 @@ class MainController extends BaseController {
 			$this->view->assign('teachbody', $teach_body);
 		}
 		
+		// 科研推广部分
+		if ($type === 'teachnology'){
+			$teachnotype = null;
+			$teachnocontent = null;
+			$teachnobody = null;
+			
+			if (isset($competenceids)) {
+				$result = $this->fetchTeachno($competenceids, $this->_user['id']);
+				$teachnotype = count($result['type']) ? $result['type'] : null;
+				$teachnocontent = count($result['content']) ? $result['content'] : null;
+				$teachnobody = count($result['body']) ? $result['body'] : null;
+			}
+			
+			$this->view->assign("teachnotype", $teachnotype);
+			$this->view->assign("teachnocontent", $teachnocontent);
+			$this->view->assign("teachnobody", $teachnobody);
+		}
 		
 		$this->view->assign ( 'user', $this->_user );
 		$this->view->assign ( 'news', $newpage );
@@ -153,7 +170,6 @@ class MainController extends BaseController {
 		$living = null; $homeplace = null;
 		$nickname = $this->_pagerequest->getParam("nickname");
         $name = $this->_pagerequest->getParam("name");
-        $image = $this->_pagerequest->getParam('image');
         $gender = $this->_pagerequest->getParam("gender");
         $gender = ($gender === 'male') ? 0 : 1;
         $college = $this->_pagerequest->getParam("college");
@@ -173,21 +189,18 @@ class MainController extends BaseController {
         foreach ($home as $key => $value){
         	$homeplace .= $value;
         }
-        
         // 图片上传
-        if($image){
-			$fileutils = new FileUploadUtils('image', 'tmp_name', parent::getIniParam('image', 'path').'upload/',
-					 $nickname.".jpg");
-			$mess = $fileutils->upload();
+		$fileutils = new FileUploadUtils('image', 'tmp_name', parent::getIniParam('image', 'path').'upload/',
+				 $nickname.".jpg");
+		$mess = $fileutils->upload();
+		if($mess === 'oversize'){
+			$this->_redirect("register/check?result=oversize");
+		} else if($mess === 'typeerror'){
+			$this->_redirect("register/check?result=typeerror");
+		} else if($mess === 'error'){
+			$this->_redirect("register/check?result=error");
+		}
 			
-			if($mess === 'oversize'){
-				$this->_redirect("register/check?result=oversize");
-			} else if($mess === 'typeerror'){
-				$this->_redirect("register/check?result=typeerror");
-			} else if($mess === 'error'){
-				$this->_redirect("register/check?result=error");
-			}
-        }
 		// 修改数据
 		$set = array(
 		   'name' => $name,
@@ -207,7 +220,7 @@ class MainController extends BaseController {
 		$where = array(
 		   'nickname' => $nickname
 		);
-		
+		$this->_helper->viewRenderer->setNoRender(true);
 		$user = new User();
 		$this->_database->update($user, $this->db, $set, $where);
 		$this->redirect('register/check?result=success');
@@ -323,8 +336,10 @@ class MainController extends BaseController {
 		} else{
 			echo "更新数据失败";
 		}
-		 
+		
+		parent::unsetAll(array($teach_body));
 		$this->_helper->viewRenderer->setNoRender(true);
+		return;
 	}
 	
 	/**
@@ -352,6 +367,60 @@ class MainController extends BaseController {
 		
 		parent::unsetAll(array($teach_body));
 		
+		$this->_helper->viewRenderer->setNoRender(true);
+		return;
+	}
+	
+	/**
+	 * 添加teachno到数据库
+	 */
+	public function addteachnoAction() {
+		$log = new LogUtils('D:/Program Files/apache/logs/output.log');
+		$name = $this->_pagerequest->getParam("name");
+		$condition = $this->_pagerequest->getParam("condition");
+		$content_id = $this->_pagerequest->getParam("content_id");
+		$user_id = $this->_pagerequest->getParam("user_id");
+		$user_id = intval($user_id);
+		$content_id = intval($content_id);
+		if (!isset($name, $condition, $content_id, $user_id)) {
+			die("MainController::addteachnoAction the name and condition and content_id and user_id must be exsist!");
+		}
+		$teachnobody = new Teachno_body();
+		$num = $this->_database->insert($teachnobody, array('name' => $name, 'condition' => $condition, 'year' => '2013',
+				'content_id' => $content_id, 'user_id' => $user_id));
+		if(intval($num)){
+			echo '插入数据成功';
+		} else{
+			echo '插入数据失败';
+		}
+		
+		parent::unsetAll(array($teachnobody));
+		
+		$this->_helper->viewRenderer->setNoRender(true);
+		return;
+	}
+	
+	/**
+	 * 更新数据到数据库
+	 */
+	public function updateteachnoAction() {
+		$name = $this->_pagerequest->getParam("name");
+		$condition = $this->_pagerequest->getParam("condition");
+		$content_id = $this->_pagerequest->getParam("content_id");
+		if(!isset($name, $condition, $content_id)){
+			die("MianController::updateteachno The name and condition and content_id must be exsist!!");
+		}
+			
+		$teachnobody = new Teachno_body();
+		$num = $this->_database->update($teachnobody, $this->db, array('name' => $name, 'condition' => $condition),
+				array('id' => $content_id));
+		if(is_int($num)){
+			echo "更新数据成功";
+		} else{
+			echo "更新数据失败";
+		}
+		
+		parent::unsetAll(array($teachnobody));
 		$this->_helper->viewRenderer->setNoRender(true);
 		return;
 	}
@@ -727,7 +796,7 @@ class MainController extends BaseController {
 	 *  @param string $userid 用户id
 	 */
 	public function fetchTeachno($ids, $userid){
-	    if(isset($ids, $userid)){
+	    if(!isset($ids, $userid)){
 	    	die("MainController::fetchTeachno The competence ids and user id must be exsist!!");
 	    }
 	    $result = array();
@@ -739,14 +808,15 @@ class MainController extends BaseController {
 	    $length = null;
 	    $sublength = null;
 	    $tempteachno = null;
-	    $tempteachnocon = null;
+	    $tempteachnocon = array();
 	    $teachbodyset = null;
 	    $subrow = null;
 	    $teachnotype = new Teachno_type();
 	    $teachnobody = new Teachno_body();
-	    
+	    $log = new LogUtils('D:/Program Files/apache/logs/output.log');
 	    foreach ($ids as $id){
 	    	$teachnoset = $this->_database->fetchData($teachnotype, $this->db, array('competence_id' => $id), 'all');
+	        
 	        if(isset($teachnoset)){
 	        	for($i = 0, $length = $teachnoset->count(); $i < $length; $i++){
 	        		// 对于每一个teachno,获取teachno_content
@@ -757,19 +827,21 @@ class MainController extends BaseController {
 	        		}
 	        		
 	        		$subrow = $this->_database->findDependentRow($tempteachno, 'Teachno_content', 'type');
+	        		
 	        		if(isset($subrow)){
+	        			$tempteachnocon = array();
 		        	    for($j = 0, $sublength = $subrow->count(); $j < $sublength; $j++){
 		        	    	$tempteachno = $subrow[$j];
 		        	    	foreach ($tempteachno as $key => $value){
 		        	    		$tempteachnocon[$key] = $value;
 		        	    	}
-		        	    	$teachnocontent[] = $tempteachnocon;
+		        	    	$teachnocontentarr[] = $tempteachnocon;
 		        	    }
 	        		}
 	        	}
 	        }
 	    }
-
+        
 	    // 取出所有的teachno body
 	    $teachnobody = $this->_database->fetchData($teachnobody, $this->db, array('user_id' => $userid), 'all');
 	    $teachnobodyarr = $this->_database->changeToArray($teachnobody);

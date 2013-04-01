@@ -7,6 +7,8 @@
    	   
    	  protected $_name = 'teachno_type';
    	  
+   	  protected $_dependentTables = array('Teachno_content');
+   	  
    	  protected $_referenceMap = array(
    	  		'competence' => array(
    	  				'columns' => array('competence_id'),

@@ -13,7 +13,14 @@
    	      		'refColumns' => array('id'),
    	      		'onDelete' => self::CASCADE,
    	      		'onUpdate' => self::RESTRICT
-   	      )		
+   	      ), 
+   	   	  'user' => array(
+   	    			'columns' => array('user_id'),
+   	    			'refTableClass' => 'User',
+   	    			'refColumns' => array('id'),
+   	    			'onDelete' => self::CASCADE,
+   	    			'onUpdate' => self::RESTRICT
+   	    		)		
    	   );
    }
 ?>
